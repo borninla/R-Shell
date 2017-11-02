@@ -1,6 +1,6 @@
 #include "connector.h"
 
-string Connector::get_token()
+string Connector::getToken()
 {
     return this->token;
 }

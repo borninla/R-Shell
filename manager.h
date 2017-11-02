@@ -2,13 +2,24 @@
 // Created by Andrew Lvovsky on 11/1/17.
 //
 
-#ifndef RSHELL_THE_WERBENJAGERMANJENSENS_MANAGER_H
-#define RSHELL_THE_WERBENJAGERMANJENSENS_MANAGER_H
+#ifndef MANAGER_H
+#define MANAGER_H
 
 
-class manager {
+#include <iostream>
+#include <queue>
+#include "token.h"
 
+using namespace std;
+
+class Manager
+{
+public:
+    Manager();
+    void run();
+private:
+    queue<Token*> prompt;
 };
 
 
-#endif //RSHELL_THE_WERBENJAGERMANJENSENS_MANAGER_H
+#endif //MANAGER_H

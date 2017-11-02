@@ -3,3 +3,22 @@
 //
 
 #include "manager.h"
+
+Manager::Manager()
+{
+
+}
+
+
+void Manager::run()
+{
+    string userInput;
+
+    while(userInput != "exit")
+    {
+        cout << "$ ";
+        getline(cin, userInput);
+
+
+    }
+}

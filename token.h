@@ -11,7 +11,7 @@ class Token
 public:
     Token();
 
-    virtual string get_token() = 0;
+    virtual string getToken() = 0;
 };
 
 

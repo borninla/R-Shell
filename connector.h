@@ -7,7 +7,7 @@
 class Connector : public Token
 {
 public:
-    string get_token();
+    string getToken();
 private:
     string token;
 };
