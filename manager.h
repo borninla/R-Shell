@@ -1,0 +1,14 @@
+//
+// Created by Andrew Lvovsky on 11/1/17.
+//
+
+#ifndef RSHELL_THE_WERBENJAGERMANJENSENS_MANAGER_H
+#define RSHELL_THE_WERBENJAGERMANJENSENS_MANAGER_H
+
+
+class manager {
+
+};
+
+
+#endif //RSHELL_THE_WERBENJAGERMANJENSENS_MANAGER_H
