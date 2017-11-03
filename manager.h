@@ -5,6 +5,11 @@
 #include <iostream>
 #include <queue>
 #include <unistd.h>
+#include <cstring>
+#include <cstdlib>
+#include <wait.h>
+#include <wait.h>
+#include <wait.h>
 
 using namespace std;
 
