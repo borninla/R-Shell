@@ -133,14 +133,14 @@ private:
 
 };
 
-const string Token::STR_NUMBER = "NUMBER";
-const string Token::STR_WORD = "WORD";
-const string Token::STR_PUNCTUATION = "PUNCTUATION";
-const string Token::STR_SPACE = "SPACE";
-const string Token::STR_QUOTE = "QUOTE";
-const string Token::STR_UNKNOWN = "UNKNOWN";
-const string Token::STR_COMMA = "COMMA";
-const string Token::STR_ASTERISK = "ASTERISK";
+//const string Token::STR_NUMBER = "NUMBER";
+//const string Token::STR_WORD = "WORD";
+//const string Token::STR_PUNCTUATION = "PUNCTUATION";
+//const string Token::STR_SPACE = "SPACE";
+//const string Token::STR_QUOTE = "QUOTE";
+//const string Token::STR_UNKNOWN = "UNKNOWN";
+//const string Token::STR_COMMA = "COMMA";
+//const string Token::STR_ASTERISK = "ASTERISK";
 
 #endif // TOKEN_H
 

@@ -12,7 +12,6 @@ using namespace std;
 class Manager
 {
 public:
-    Manager();
     void run();
 private:
     queue<Token> tokens;

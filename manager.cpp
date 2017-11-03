@@ -1,10 +1,5 @@
 #include "manager.h"
 
-Manager::Manager()
-{
-
-}
-
 void Manager::run()
 {
     string userInput;
