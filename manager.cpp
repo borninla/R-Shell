@@ -1,14 +1,9 @@
-//
-// Created by Andrew Lvovsky on 11/1/17.
-//
-
 #include "manager.h"
 
 Manager::Manager()
 {
 
 }
-
 
 void Manager::run()
 {
@@ -19,6 +14,14 @@ void Manager::run()
         cout << "$ ";
         getline(cin, userInput);
 
+        StrTokenizer stk(userInput);
+        Token t;
+
+        while(!stk.done())
+        {
+            stk >> t;
+            tokens.push(t);
+        }
 
     }
 }
