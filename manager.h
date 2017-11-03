@@ -5,8 +5,6 @@
 #include <iostream>
 #include <queue>
 #include <unistd.h>
-#include "token.h"
-#include "str_tokenizer.h"
 
 using namespace std;
 
@@ -19,7 +17,7 @@ private:
     void parse(char *line, char **command);
 
     bool wasSuccess;
-    queue<Token> tokens;
+    queue<string> tokens;
 
 };
 
