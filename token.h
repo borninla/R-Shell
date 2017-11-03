@@ -133,6 +133,8 @@ private:
 
 };
 
+// commented out due to a duplicate symbol error
+
 //const string Token::STR_NUMBER = "NUMBER";
 //const string Token::STR_WORD = "WORD";
 //const string Token::STR_PUNCTUATION = "PUNCTUATION";

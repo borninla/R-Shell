@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <queue>
+#include <unistd.h>
 #include "token.h"
 #include "str_tokenizer.h"
 
@@ -14,7 +15,12 @@ class Manager
 public:
     void run();
 private:
+    void execute(char **command);
+    void parse(char *line, char **command);
+
+    bool wasSuccess;
     queue<Token> tokens;
+
 };
 
 
