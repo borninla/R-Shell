@@ -24,6 +24,8 @@ void Manager::run() {
             d >> str;
             char* currentLine = _copyStrToCharPtr(str);
 
+            memset(command, 0, sizeof(command));
+
             //currentLine is a single command, ;-delimited
             parse(currentLine, command);
             //now, command has all words, tokenized using whitespace
@@ -61,6 +63,8 @@ char* Manager::_copyStrToCharPtr(const string& str) {
     }
 
     c[str.size()] = '\0';
+
+    return c;
 }
 
 void Manager::execute(char **command)

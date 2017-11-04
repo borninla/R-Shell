@@ -8,7 +8,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <string>
-#include <wait.h> //uncomment for hammer
+//#include <wait.h> //uncomment for hammer
 
 using namespace std;
 
@@ -25,7 +25,7 @@ private:
  * @param command array of cstrings which this function will populate
  */
     void parse(char *line, char **command);
-    void populateQueue();
+    //void populateQueue();
     char* _copyStrToCharPtr(const string& str); 
 
     bool wasSuccess;
