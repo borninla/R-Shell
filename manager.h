@@ -7,7 +7,8 @@
 #include <unistd.h>
 #include <cstring>
 #include <cstdlib>
-#include <wait.h>
+//#include <wait.h> //uncomment for hammer
+//>>>>>>> 0185e0bc0d66ea43c5efd18a0b527f00db3dbde8
 
 using namespace std;
 
