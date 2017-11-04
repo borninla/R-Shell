@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <cstring>
 #include <cstdlib>
-//#include <wait.h> //uncomment for hammer
-//>>>>>>> 0185e0bc0d66ea43c5efd18a0b527f00db3dbde8
+#include <string>
+#include <wait.h> //uncomment for hammer
 
 using namespace std;
 
@@ -26,6 +26,7 @@ private:
  */
     void parse(char *line, char **command);
     void populateQueue();
+    char* _copyStrToCharPtr(const string& str); 
 
     bool wasSuccess;
     queue<string> tokens;
