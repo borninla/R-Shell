@@ -11,7 +11,9 @@ void Manager::run()
         cin.getline(line, 1024);
         cout << endl;
 
+        //line has all words including whitespace
         parse(line, command);
+        //now, command has all words, tokenized using whitespace
 
         if (strcmp(command[0], "exit") == 0)
             exit(0);
@@ -51,15 +53,21 @@ void Manager::execute(char **command)
 
 void Manager::parse(char *line, char **command)
 {
-    while (*line != '\0')
+    while (*line != '\0')  //While you're not at the end of the cstring,
     {
+
+        //Replace whitespace with \0
         while (*line == ' ' || *line == '\t' || *line == '\n')
         {
-            *line++ = '\0';
-        }
+            *line = '\0';
+            line++;
+	}
 
-        *command++ = line;
+        //Save line to its place in command, and move command walker forwward
+        *command = line;
+        command++;
 
+        //Advance line to the next non-whitespace character
         while (*line != '\0' && *line != ' ' && *line != '\t' && *line != '\n')
         {
             line++;
