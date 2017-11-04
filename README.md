@@ -1,0 +1,1 @@
+We were tasked with desiging a shell that takes in multiple commands (seperated my a semicolon), as well as logical operators (or connectors). These commands use syscalls (fork and execvp) in order to execute programs for commands (ls, cd, etc).
