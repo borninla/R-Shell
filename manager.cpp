@@ -22,6 +22,9 @@ void Manager::run() {
             //Extract from d and prepare a char*
             string str;
             d >> str;
+            str = str.substr(0, str.find("#") - 1);//handle comments
+            if (str == "#")
+                continue;
             char* currentLine = _copyStrToCharPtr(str);
 
             memset(command, 0, sizeof(command));
