@@ -1,6 +1,6 @@
 #include "manager.h"
-#include "delim.h"
-#include <string>
+//#include "delim.h"
+//#include <string>
 
 
 
@@ -22,12 +22,13 @@ void Manager::run() {
             //Extract from d and prepare a char*
             string str;
             d >> str;
-            str = str.substr(0, str.find("#") - 1);//handle comments
+            str = str.substr(0, str.find("#") - 1);  //handle comments
+            str = trim(str);                         //handle leading and trailing whitespace
             if (str == "#")
                 continue;
             char* currentLine = _copyStrToCharPtr(str);
 
-            memset(command, 0, sizeof(command));
+            memset(command, 0, sizeof(command));     //prepare command for parse()
 
             //currentLine is a single command, ;-delimited
             parse(currentLine, command);
@@ -36,14 +37,15 @@ void Manager::run() {
             //Execute commands (or exit)
             if (strcmp(command[0], "exit") == 0)
                 exit(0);
-            execute(command);
+            if (_shouldExecute(str))
+                execute(command);
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
             delete [] currentLine;
         }
 
-/*
+/*      //outdated code
         //line has all words including whitespace
         parse(line, command);
         //now, command has all words, tokenized using whitespace
@@ -56,6 +58,47 @@ void Manager::run() {
     }
 }
 
+//@TODO
+/**
+ * @brief Determines if connectors permit the execution of a command
+ * @param str 
+ *
+ */
+bool Manager::_shouldExecute(string str) {
+
+    str = trim(str);
+
+    //if there are no connectors to test, return true
+    if (str.size() < 2)
+        return true;
+    
+    string firstTwo = str.substr(0, 2);
+    if (!_isConnector(firstTwo))
+        return true;
+
+    //Now, we know that there is a connector present
+
+    //Next step requires that wasSuccessful has been updated!
+    if ((wasSuccess && firstTwo == "&&")
+        || (!wasSuccess && firstTwo == "||")) {
+
+        return true;
+    }
+
+    return false;
+
+}
+
+bool Manager::_isConnector(const string& str) {
+
+    if(str == "&&" || str == "||")
+        return true;
+    else
+        return false;
+
+}
+
+/*
 char* Manager::_copyStrToCharPtr(const string& str) {
 
     char * c = new char[str.size() + 1];
@@ -69,6 +112,7 @@ char* Manager::_copyStrToCharPtr(const string& str) {
 
     return c;
 }
+*/
 
 void Manager::execute(char **command)
 {

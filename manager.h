@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <string>
 #include <wait.h> //uncomment for hammer
+#include "delim.h"
+#include "util.h"
 
 using namespace std;
 
@@ -26,8 +28,9 @@ private:
  */
     void parse(char *line, char **command);
     //void populateQueue();
-    char* _copyStrToCharPtr(const string& str); 
-
+//    char* _copyStrToCharPtr(const string& str); 
+    bool _shouldExecute(string str);
+    bool _isConnector(const string& str);
     bool wasSuccess;
     queue<string> tokens;
 
