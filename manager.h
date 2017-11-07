@@ -8,7 +8,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <string>
-#include <wait.h> //uncomment for hammer
+#include <climits>
+//#include <wait.h> //uncomment for hammer
 #include "delim.h"
 #include "util.h"
 
@@ -21,16 +22,17 @@ public:
 private:
     void execute(char **command);
 
-    /**
+/** parse
  * @brief Populates command (an array of cstrings) with cstrings delimited by whitespace
  * @param line Beginning of cstring containing all args
  * @param command array of cstrings which this function will populate
- */
+**/
     void parse(char *line, char **command);
     //void populateQueue();
-//    char* _copyStrToCharPtr(const string& str); 
-    bool _shouldExecute(string str);
+    bool _shouldExecute(string str, bool isFirstToken);
     bool _isConnector(const string& str);
+    string _parseUntilConnector(string& parseThis);
+
     bool wasSuccess;
     queue<string> tokens;
 

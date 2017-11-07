@@ -16,19 +16,25 @@ void Manager::run() {
         line[cin.gcount()] = '\0';  //null-terminated
         cout << endl;
 
+        bool isFirstToken = true;
+
+        string str;
         Delim d(line, ';');    //Constructor delimits line
+
         while(!d.done()) {
 
             //Extract from d and prepare a char*
-            string str;
             d >> str;
-            str = str.substr(0, str.find("#") - 1);  //handle comments
+            str = str.substr(0, str.find('#') - 1);  //handle comments
             str = trim(str);                         //handle leading and trailing whitespace
             if (str == "#")
                 continue;
-            char* currentLine = _copyStrToCharPtr(str);
+            //char* currentLine = _copyStrToCharPtr(str);
+            char* currentLine = _copyStrToCharPtr(_parseUntilConnector(str));
 
             memset(command, 0, sizeof(command));     //prepare command for parse()
+
+            //@TODO connector parsing should happen here
 
             //currentLine is a single command, ;-delimited
             parse(currentLine, command);
@@ -37,12 +43,15 @@ void Manager::run() {
             //Execute commands (or exit)
             if (strcmp(command[0], "exit") == 0)
                 exit(0);
-            if (_shouldExecute(str))
+            if (_shouldExecute(str, isFirstToken))
                 execute(command);
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
             delete [] currentLine;
+            cout << endl;
+
+            isFirstToken = false;
         }
 
 /*      //outdated code
@@ -61,40 +70,36 @@ void Manager::run() {
 //@TODO
 /**
  * @brief Determines if connectors permit the execution of a command
- * @param str 
- *
- */
-bool Manager::_shouldExecute(string str) {
+ * @param str
+**/
+bool Manager::_shouldExecute(string str, bool isFirstToken) {
 
     str = trim(str);
 
     //if there are no connectors to test, return true
     if (str.size() < 2)
         return true;
-    
+
     string firstTwo = str.substr(0, 2);
+
+    //error check for connector being first token
+    if (_isConnector(firstTwo) && isFirstToken)
+        cerr << "Cannot execute commands with connectors as the first token" << endl;
+
     if (!_isConnector(firstTwo))
         return true;
 
     //Now, we know that there is a connector present
 
-    //Next step requires that wasSuccessful has been updated!
-    if ((wasSuccess && firstTwo == "&&")
-        || (!wasSuccess && firstTwo == "||")) {
-
-        return true;
-    }
-
-    return false;
+    //Next step requires that wasSuccess has been updated!
+    return (wasSuccess && firstTwo == "&&")
+           || (!wasSuccess && firstTwo == "||");
 
 }
 
 bool Manager::_isConnector(const string& str) {
 
-    if(str == "&&" || str == "||")
-        return true;
-    else
-        return false;
+    return str == "&&" || str == "||";
 
 }
 
@@ -152,7 +157,7 @@ void Manager::parse(char *line, char **command)
         {
             *line = '\0';
             line++;
-	}
+        }
 
         //Save line to its place in command, and move command walker forwward
         *command = line;
@@ -164,4 +169,24 @@ void Manager::parse(char *line, char **command)
             line++;
         }
     }
+}
+
+string Manager::_parseUntilConnector(string& parseThis)
+{
+    size_t foundAnd, foundOr, foundSmallest;
+
+    foundAnd = parseThis.find("&&");
+    foundOr = parseThis.find("||");
+
+    if(foundAnd != UINT_MAX && foundOr != UINT_MAX && foundAnd < foundOr)
+        foundSmallest = foundAnd;
+    else if(foundAnd != UINT_MAX && foundOr != UINT_MAX && foundOr < foundAnd)
+        foundSmallest = foundOr;
+    else
+        return parseThis;
+
+    string parsedStr = parseThis.substr(0, foundSmallest - 1);
+    parseThis.erase(0, foundSmallest - 1);
+
+    return parsedStr;
 }
