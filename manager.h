@@ -33,6 +33,7 @@ private:
     bool _isConnector(const string& str);
     string _parseUntilConnector(string& parseThis);
 
+    bool isFirstToken;
     bool wasSuccess;
     queue<string> tokens;
 
