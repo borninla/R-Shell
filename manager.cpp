@@ -11,27 +11,22 @@ void Manager::run() {
 
     while (true) {
 
-        isFirstToken = true;
-
         cout << "$ ";
         cin.getline(line, 1024 + 1);
         line[cin.gcount()] = '\0';  //null-terminated
         cout << endl;
 
+        bool isFirstToken = true;
+
         string str;
         Delim d(line, ';');    //Constructor delimits line
 
-        while(!d.done() || !_isConnector(str.substr(0, 2)) ) {
+        while(!d.done()) {
 
             //Extract from d and prepare a char*
-            if(!d.done())
-            {
-                d >> str;
-            }
-
+            d >> str;
             str = str.substr(0, str.find('#') - 1);  //handle comments
             str = trim(str);                         //handle leading and trailing whitespace
-
             if (str == "#")
                 continue;
             //char* currentLine = _copyStrToCharPtr(str);
@@ -48,7 +43,7 @@ void Manager::run() {
             //Execute commands (or exit)
             if (strcmp(command[0], "exit") == 0)
                 exit(0);
-            if (_shouldExecute(currentLine, isFirstToken))
+            if (_shouldExecute(str, isFirstToken))
                 execute(command);
 
             //Memory cleanup for future iterations
@@ -97,7 +92,8 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
     //Now, we know that there is a connector present
 
     //Next step requires that wasSuccess has been updated!
-    return (wasSuccess && firstTwo == "&&") || (!wasSuccess && firstTwo == "||");
+    return (wasSuccess && firstTwo == "&&")
+           || (!wasSuccess && firstTwo == "||");
 
 }
 
@@ -177,7 +173,6 @@ void Manager::parse(char *line, char **command)
 
 string Manager::_parseUntilConnector(string& parseThis)
 {
-    string parsedStr;
     size_t foundAnd, foundOr, foundSmallest;
 
     foundAnd = parseThis.find("&&");
@@ -190,15 +185,7 @@ string Manager::_parseUntilConnector(string& parseThis)
     else
         return parseThis;
 
-    if(_isConnector(parseThis.substr(0, 2)))
-    {
-        parsedStr = parseThis.substr(3, parseThis.size() - 3);
-        parsedStr = _parseUntilConnector(parsedStr);
-
-        return parsedStr;
-    }
-
-    parsedStr = parseThis.substr(0, foundSmallest - 1);
+    string parsedStr = parseThis.substr(0, foundSmallest - 1);
     parseThis.erase(0, foundSmallest - 1);
 
     return parsedStr;
