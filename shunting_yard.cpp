@@ -34,6 +34,14 @@ void ShuntingYard::run()
         connector_stack.pop();
     }
 
+    cout << "Original prompt: " << delivery << endl;
+    cout << " Reverse polish: " ;
+
+    while (!command_queue.empty()) {
+        cout << command_queue.front() << " ";
+        command_queue.pop();
+    }
+
 }
 
 //debug for checking what strncmp is returning

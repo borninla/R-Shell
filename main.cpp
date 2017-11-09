@@ -9,7 +9,7 @@ int main()
     //Manager m;
     //m.run();
 
-    ShuntingYard sy("echo hello || ls -a && git status");
+    ShuntingYard sy("echo hello && git status || ls -a");
     sy.run();
 
     return 0;
