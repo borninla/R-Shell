@@ -6,11 +6,11 @@ using namespace std;
 
 int main()
 {
-    //Manager m;
-    //m.run();
+//    Manager m;
+//    m.run();
 
-    ShuntingYard sy("echo hello && git status || ls -a");
-    sy.run();
+    ShuntingYard sy("Ryan || Andrew && Sean && Alex || Ross || Michael");
+    cout << sy.getReversePolish() << endl;
 
     return 0;
 };

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stack>
 #include <queue>
+#include <cstring>
 
 #include "util.h"
 
@@ -14,6 +15,7 @@ class ShuntingYard
 public:
     ShuntingYard(string command);
     void run();
+    string getReversePolish();
 private:
     string delivery;
     queue<char*> command_queue;

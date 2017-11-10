@@ -3,6 +3,7 @@
 ShuntingYard::ShuntingYard(string command)
 {
     delivery = command;
+    run();
 }
 
 void ShuntingYard::run()
@@ -45,17 +46,33 @@ void ShuntingYard::run()
         command_queue.push(connector_stack.top());
         connector_stack.pop();
     }
+}
 
-    //debug print for comparing notations
-    cout << "Original prompt: " << delivery << endl;
-    cout << " Reverse polish: " ;
+string ShuntingYard::getReversePolish()
+{
+    string returnThisString;
 
-    while (!command_queue.empty()) {
-        cout << command_queue.front() << " ";
+    while (!command_queue.empty())
+    {
+        returnThisString += command_queue.front();
+
+        if(command_queue.size() != 1)
+            returnThisString += " ";
+
         command_queue.pop();
     }
 
+    return returnThisString;
 }
+
+//    //debug print for comparing notations
+//    cout << "Original prompt: " << delivery << endl;
+//    cout << " Reverse polish: " ;
+//
+//    while (!command_queue.empty()) {
+//        cout << command_queue.front() << " ";
+//        command_queue.pop();
+//    }
 
 //debug for checking what strncmp is returning
 //        cout << char_delivery << " &&: " << strncmp(char_delivery, "&&", 2) << " ||: ";

@@ -1,8 +1,4 @@
 #include "manager.h"
-//#include "delim.h"
-//#include <string>
-
-
 
 void Manager::run() {
 
