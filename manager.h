@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <string>
 #include <climits>
-//#include <wait.h> //uncomment for hammer
+#include <wait.h> //uncomment for hammer
 #include "delim.h"
 #include "util.h"
 
