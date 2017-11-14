@@ -3,15 +3,16 @@
 
 
 #include <iostream>
-#include <queue>
+#include <stack>
 #include <unistd.h>
 #include <cstring>
 #include <cstdlib>
 #include <string>
 #include <climits>
-#include <wait.h> //uncomment for hammer
+//#include <wait.h> //uncomment for hammer
 #include "delim.h"
 #include "util.h"
+#include "shunting_yard.h"
 
 using namespace std;
 
@@ -30,12 +31,10 @@ private:
     void parse(char *line, char **command);
     //void populateQueue();
     bool _shouldExecute(string str, bool isFirstToken);
-    bool _isConnector(const string& str);
-    string _parseUntilConnector(string& parseThis);
 
     bool isFirstToken;
     bool wasSuccess;
-    queue<string> tokens;
+    stack<char*> tokens;
 
 };
 

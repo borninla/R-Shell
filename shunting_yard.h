@@ -15,11 +15,10 @@ class ShuntingYard
 public:
     ShuntingYard(string command);
     void run();
-    string getReversePolish();
+    stack<string> getReversePolish();
 private:
     string delivery;
-    queue<char*> command_queue;
-    stack<char*> connector_stack;
+    stack<string> command_stack, connector_stack;
 
 //    const int AND_PRECEDENCE = 2;
 //    const int OR_PRECEDENCE = 1;

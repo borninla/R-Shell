@@ -25,15 +25,17 @@ void Manager::run() {
             str = trim(str);                         //handle leading and trailing whitespace
             if (str == "#")
                 continue;
-            //char* currentLine = _copyStrToCharPtr(str);
-            char* currentLine = _copyStrToCharPtr(_parseUntilConnector(str));
+
+            ShuntingYard sy(str);
+
+            string reversePolishString = "hey";
+
+            char* currentToken = strtok(_copyStrToCharPtr(reversePolishString), " "); //tokenize input
 
             memset(command, 0, sizeof(command));     //prepare command for parse()
 
-            //@TODO connector parsing should happen here
-
-            //currentLine is a single command, ;-delimited
-            parse(currentLine, command);
+            //currentToken is a single command, ;-delimited
+            parse(currentToken, command);
             //now, command has all words, tokenized using whitespace
 
             //Execute commands (or exit)
@@ -44,26 +46,14 @@ void Manager::run() {
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
-            delete [] currentLine;
+            delete [] currentToken;
             cout << endl;
 
             isFirstToken = false;
         }
-
-/*      //outdated code
-        //line has all words including whitespace
-        parse(line, command);
-        //now, command has all words, tokenized using whitespace
-
-        if (strcmp(command[0], "exit") == 0)
-            exit(0);
-        execute(command);
-
-        memset(command, 0, sizeof(command));    // clears c-string to avoid later command interference*/
     }
 }
 
-//@TODO
 /**
  * @brief Determines if connectors permit the execution of a command
  * @param str
@@ -92,28 +82,6 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
            || (!wasSuccess && firstTwo == "||");
 
 }
-
-bool Manager::_isConnector(const string& str) {
-
-    return str == "&&" || str == "||";
-
-}
-
-/*
-char* Manager::_copyStrToCharPtr(const string& str) {
-
-    char * c = new char[str.size() + 1];
-
-    for (size_t i = 0; i < str.size(); i++) {
-
-        c[i] = str[i];
-    }
-
-    c[str.size()] = '\0';
-
-    return c;
-}
-*/
 
 void Manager::execute(char **command)
 {
@@ -167,22 +135,14 @@ void Manager::parse(char *line, char **command)
     }
 }
 
-string Manager::_parseUntilConnector(string& parseThis)
-{
-    size_t foundAnd, foundOr, foundSmallest;
-
-    foundAnd = parseThis.find("&&");
-    foundOr = parseThis.find("||");
-
-    if(foundAnd != UINT_MAX && foundOr != UINT_MAX && foundAnd < foundOr)
-        foundSmallest = foundAnd;
-    else if(foundAnd != UINT_MAX && foundOr != UINT_MAX && foundOr < foundAnd)
-        foundSmallest = foundOr;
-    else
-        return parseThis;
-
-    string parsedStr = parseThis.substr(0, foundSmallest - 1);
-    parseThis.erase(0, foundSmallest - 1);
-
-    return parsedStr;
-}
+//char *op1, *op2, *result;
+//if command
+//if(strncmp(currentToken, "&&", 2) != 0 && strncmp(currentToken, "||", 2) != 0)
+//tokens.push(currentToken);
+//else
+//{
+//op2 = tokens.top();
+//tokens.pop();
+//op1 = tokens.top();
+//tokens.pop();
+//result =
