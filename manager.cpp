@@ -26,16 +26,16 @@ void Manager::run() {
             if (str == "#")
                 continue;
 
-            ShuntingYard sy(str);
+            queue<string> package = returnParsedData(str);
+            ShuntingYard sy(package);
+            package = sy.getReversePolish();
 
-            string reversePolishString = "hey";
-
-            char* currentToken = strtok(_copyStrToCharPtr(reversePolishString), " "); //tokenize input
+            // get stack to take tokens from package queue to evaluate postfix notation
 
             memset(command, 0, sizeof(command));     //prepare command for parse()
 
             //currentToken is a single command, ;-delimited
-            parse(currentToken, command);
+            //parse(currentToken, command);
             //now, command has all words, tokenized using whitespace
 
             //Execute commands (or exit)
@@ -46,7 +46,7 @@ void Manager::run() {
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
-            delete [] currentToken;
+            //delete [] currentToken;
             cout << endl;
 
             isFirstToken = false;
@@ -56,7 +56,8 @@ void Manager::run() {
 
 /**
  * @brief Determines if connectors permit the execution of a command
- * @param str
+ * @param str String of the form ** <cmd> (where ** denotes a connector, && or ||)
+ * NOTE: wasSuccess must be properly updated from the previous command!!!!!!!!!!!!!
 **/
 bool Manager::_shouldExecute(string str, bool isFirstToken) {
 
@@ -111,6 +112,11 @@ void Manager::execute(char **command)
     }
 }
 
+/** parse
+ * @brief Populates command (an array of cstrings) with cstrings delimited by whitespace
+ * @param line Beginning of cstring containing all args
+ * @param command array of cstrings which this function will populate
+**/
 void Manager::parse(char *line, char **command)
 {
     while (*line != '\0')  //While you're not at the end of the cstring,
@@ -135,6 +141,34 @@ void Manager::parse(char *line, char **command)
     }
 }
 
+void Manager::evalPostFix(queue<string> postfix_queue)
+{
+    stack<string> eval_stack;
+    string stringToEval;
+
+    wasSuccess = true;  //sets to true before going into the loop
+
+    while(!postfix_queue.empty())
+    {
+        if(postfix_queue.front() != "&&" && postfix_queue.front() != "||")  //if not connector
+            eval_stack.push(postfix_queue.front());
+        else
+        {
+            stringToEval = eval_stack.top() + " " + postfix_queue.front() + " ";
+            eval_stack.pop();
+            postfix_queue.pop();
+            stringToEval += eval_stack.top();   // [command] [connector] [command]
+            eval_stack.pop();
+            evaluate(stringToEval);
+
+            if(wasSuccess)
+            {
+                //@TODO: LEFT OFF HERE
+            }
+        }
+    }
+}
+
 //char *op1, *op2, *result;
 //if command
 //if(strncmp(currentToken, "&&", 2) != 0 && strncmp(currentToken, "||", 2) != 0)
@@ -146,3 +180,29 @@ void Manager::parse(char *line, char **command)
 //op1 = tokens.top();
 //tokens.pop();
 //result =
+
+/**
+ * @brief Evaluates a binary expression according to rules for && and ||
+ * @param binExpression - expression of the form A ** B
+ *        (where A and B are individually executable commands,
+ *        and where ** is connector && or ||)
+ * NOTE: Modifies Manager::wasSuccess
+ */
+//void Manager::evaluate(string binExpression)
+//{
+//    queue<string> q = returnParsedData(binExpression);
+//
+//    string firstArg = q.front();
+//    q.pop();
+//
+//    execute(firstArg);  //modifies wasSuccess
+//
+//    string restOfExpression = q.dumpToStr() //returnParsedData to convert queue to str - shouldn't modify q!
+//
+//    if(_shouldExecute(restOfExpression))    //handles both && and ||
+//    {
+//        q.pop();                  //get rid of connector
+//        assert(q.size() == 1);    //last token should be executable command
+//        execute(q.front());
+//    }
+//}

@@ -13,12 +13,12 @@ using namespace std;
 class ShuntingYard
 {
 public:
-    ShuntingYard(string command);
+    ShuntingYard(queue<string> command);
     void run();
-    stack<string> getReversePolish();
+    queue<string> getReversePolish();
 private:
-    string delivery;
-    stack<string> command_stack, connector_stack;
+    queue<string> delivery, command_queue;
+    stack<string> connector_stack;
 
 //    const int AND_PRECEDENCE = 2;
 //    const int OR_PRECEDENCE = 1;
