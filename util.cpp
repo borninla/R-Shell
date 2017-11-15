@@ -92,3 +92,25 @@ queue<string> returnParsedData(string parseThisString)
 
     return tokens;
 }
+
+string toSpaceDelimitedString(queue<string> q, string delim) {
+
+    string concatenated = "";
+
+    while (!q.empty()) {
+	
+	concatenated += q.front();
+	q.pop();
+
+	concatenated += delim;
+
+    }
+
+    return concatenated;
+}
+
+	
+
+
+
+}

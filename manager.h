@@ -9,10 +9,14 @@
 #include <cstdlib>
 #include <string>
 #include <climits>
+#include <cassert>
 //#include <wait.h> //uncomment for hammer
+
 #include "delim.h"
 #include "util.h"
 #include "shunting_yard.h"
+
+
 
 using namespace std;
 
@@ -22,6 +26,7 @@ public:
     void run();
 private:
     void execute(char **command);
+    void execute(const string& command);
     void parse(char *line, char **command);
     //void populateQueue();
     bool _shouldExecute(string str, bool isFirstToken);

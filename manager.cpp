@@ -39,10 +39,12 @@ void Manager::run() {
             //now, command has all words, tokenized using whitespace
 
             //Execute commands (or exit)
-            if (strcmp(command[0], "exit") == 0)
+           if (strcmp(command[0], "exit") == 0)
                 exit(0);
-            if (_shouldExecute(str, isFirstToken))
-                execute(command);
+	   //@TODO Utilize evaluateBinExpression() here!!
+
+           /*if (_shouldExecute(str, isFirstToken))
+                execute(command);*/
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
@@ -110,6 +112,18 @@ void Manager::execute(char **command)
     {
         while(wait(&status) != process_id);
     }
+}
+
+void Manager::execute(string commandStr) {
+
+    char * cStr = _copyStrToCharPtr(commandStr);
+    char * cmd[64];
+
+    parse(cStr, cmd);
+
+    execute(cmd);
+
+    delete [] cStr;
 }
 
 /** parse
@@ -206,3 +220,24 @@ void Manager::evalPostFix(queue<string> postfix_queue)
 //        execute(q.front());
 //    }
 //}
+//
+
+void Manger::evaluate(string binExpression) {
+
+    queue<string> q = returnParsedData(binExpression);
+
+    assert(q.size() == 3);  //first command, connector, last command
+
+    string firstArg = q.front();
+    q.pop();
+
+    execute(firstArg);   //modifies wasSuccess
+
+    string restOfExpression = toDelimitedString(q);  //does not modify q
+
+    if(_shouldExecute(restOfExpression, false)) {
+        
+        q.pop(); //get rid of connector
+	execute(q.front()); //q.front() is the last command
+    }
+}
