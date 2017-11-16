@@ -1,4 +1,4 @@
-#include "util.h"
+#include "../header/util.h"
 
 char* _copyStrToCharPtr(const string& str) {
 
@@ -107,10 +107,4 @@ string toSpaceDelimitedString(queue<string> q, string delim) {
     }
 
     return concatenated;
-}
-
-	
-
-
-
 }

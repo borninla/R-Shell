@@ -1,4 +1,4 @@
-#include "shunting_yard.h"
+#include "../header/shunting_yard.h"
 
 ShuntingYard::ShuntingYard(queue<string> command)
 {

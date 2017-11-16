@@ -1,4 +1,4 @@
-#include "delim.h"
+#include "../header/delim.h"
 
 Delim::Delim() {
 

@@ -1,4 +1,4 @@
-#include "manager.h"
+#include "../header/manager.h"
 
 void Manager::run() {
 
@@ -39,12 +39,12 @@ void Manager::run() {
             //now, command has all words, tokenized using whitespace
 
             //Execute commands (or exit)
-           if (strcmp(command[0], "exit") == 0)
+            if (strcmp(command[0], "exit") == 0)
                 exit(0);
-	   //@TODO Utilize evaluateBinExpression() here!!
+            //@TODO Utilize evaluateBinExpression() here!!
 
-           /*if (_shouldExecute(str, isFirstToken))
-                execute(command);*/
+            /*if (_shouldExecute(str, isFirstToken))
+                 execute(command);*/
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
@@ -164,8 +164,11 @@ void Manager::evalPostFix(queue<string> postfix_queue)
 
     while(!postfix_queue.empty())
     {
-        if(postfix_queue.front() != "&&" && postfix_queue.front() != "||")  //if not connector
+        if(postfix_queue.front() != "&&" && postfix_queue.front() != "||") //if not connector
+        {
             eval_stack.push(postfix_queue.front());
+            postfix_queue.pop();
+        }
         else
         {
             stringToEval = eval_stack.top() + " " + postfix_queue.front() + " ";
@@ -222,7 +225,7 @@ void Manager::evalPostFix(queue<string> postfix_queue)
 //}
 //
 
-void Manger::evaluate(string binExpression) {
+void Manager::evaluate(string binExpression) {
 
     queue<string> q = returnParsedData(binExpression);
 
@@ -233,11 +236,11 @@ void Manger::evaluate(string binExpression) {
 
     execute(firstArg);   //modifies wasSuccess
 
-    string restOfExpression = toDelimitedString(q);  //does not modify q
+    string restOfExpression = toSpaceDelimitedString(q, " ");  //does not modify q
 
     if(_shouldExecute(restOfExpression, false)) {
-        
+
         q.pop(); //get rid of connector
-	execute(q.front()); //q.front() is the last command
+        execute(q.front()); //q.front() is the last command
     }
 }
