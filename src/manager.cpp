@@ -1,4 +1,4 @@
-#include "manager.h"
+#include "../header/manager.h"
 
 void Manager::run() {
 
