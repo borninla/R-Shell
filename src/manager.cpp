@@ -1,4 +1,4 @@
-#include "../header/manager.h"
+#include "manager.h"
 
 void Manager::run() {
 
@@ -19,6 +19,9 @@ void Manager::run() {
 
         while(!d.done()) {
 
+            //prepare command for parse()
+	    memset(command, 0, sizeof(command);
+
             //Extract from d and prepare a char*
             d >> str;
             str = str.substr(0, str.find('#') - 1);  //handle comments
@@ -26,25 +29,28 @@ void Manager::run() {
             if (str == "#")
                 continue;
 
-            queue<string> package = returnParsedData(str);
-            ShuntingYard sy(package);
-            package = sy.getReversePolish();
+            ShuntingYard sy(returnParsedData(str));
+            queue<string> cmdAndConnectorQueue = sy.getReversePolish();
+	    //queue<CompToken*> TokenQueue = convToTokenQueue(cmdAndConnectorQueue);
+
+	    //Now, cmdAndConnectorQueue is in Reverse Polish
+	    //@TODO: evaluate!!
+	    
 
             // get stack to take tokens from package queue to evaluate postfix notation
 
-            memset(command, 0, sizeof(command));     //prepare command for parse()
-
-            //currentToken is a single command, ;-delimited
-            //parse(currentToken, command);
-            //now, command has all words, tokenized using whitespace
-
+            /*
+	    //vv DEPRACATED			(but don't delete until properly replaced!)
             //Execute commands (or exit)
-            if (strcmp(command[0], "exit") == 0)
+           if (strcmp(command[0], "exit") == 0)
                 exit(0);
-            //@TODO Utilize evaluateBinExpression() here!!
+	   //@TODO Utilize evaluateBinExpression() here!!
 
-            /*if (_shouldExecute(str, isFirstToken))
-                 execute(command);*/
+           //if (_shouldExecute(str, isFirstToken))
+           //     execute(command);
+            */
+
+
 
             //Memory cleanup for future iterations
             memset(command, 0, sizeof(command));
@@ -91,6 +97,10 @@ void Manager::execute(char **command)
     pid_t process_id;
     int status;
 
+    if (equals(*command, "exit", false))
+        exit(0);
+
+
     if((process_id = fork()) < 0)   // if something went wrong with forking the process
     {
         cerr << "ERROR: child process forking failed" << endl;
@@ -118,6 +128,7 @@ void Manager::execute(string commandStr) {
 
     char * cStr = _copyStrToCharPtr(commandStr);
     char * cmd[64];
+    memset(cmd, 0, sizeof(cmd));
 
     parse(cStr, cmd);
 
@@ -164,11 +175,8 @@ void Manager::evalPostFix(queue<string> postfix_queue)
 
     while(!postfix_queue.empty())
     {
-        if(postfix_queue.front() != "&&" && postfix_queue.front() != "||") //if not connector
-        {
+        if(postfix_queue.front() != "&&" && postfix_queue.front() != "||")  //if not connector
             eval_stack.push(postfix_queue.front());
-            postfix_queue.pop();
-        }
         else
         {
             stringToEval = eval_stack.top() + " " + postfix_queue.front() + " ";
@@ -225,7 +233,7 @@ void Manager::evalPostFix(queue<string> postfix_queue)
 //}
 //
 
-void Manager::evaluate(string binExpression) {
+void Manger::evaluate(string binExpression) {
 
     queue<string> q = returnParsedData(binExpression);
 
@@ -236,11 +244,11 @@ void Manager::evaluate(string binExpression) {
 
     execute(firstArg);   //modifies wasSuccess
 
-    string restOfExpression = toSpaceDelimitedString(q, " ");  //does not modify q
+    string restOfExpression = toDelimitedString(q);  //does not modify q
 
     if(_shouldExecute(restOfExpression, false)) {
-
+        
         q.pop(); //get rid of connector
-        execute(q.front()); //q.front() is the last command
+	execute(q.front()); //q.front() is the last command
     }
 }

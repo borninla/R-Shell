@@ -1,4 +1,4 @@
-#include "../header/util.h"
+#include "util.h"
 
 char* _copyStrToCharPtr(const string& str) {
 
@@ -108,3 +108,63 @@ string toSpaceDelimitedString(queue<string> q, string delim) {
 
     return concatenated;
 }
+
+bool equals(const char * cStr, string str, bool capsSensitive) {
+
+	string compareMeString;
+	char * compareMeCStr;
+	bool shouldDelete;
+
+	if (capsSensitive) {
+		
+		compareMeString = str;
+		compareMeChar = *cStr;
+		shouldDelete = false;
+	} else {
+		
+		compareMeCStr = _copyStrToCharPtr(toLower(str));
+		compareMeString = toLower(str);
+		shouldDelete = true;
+	}
+
+
+
+	for (size_t i = 0; i < compareMeString.size(); i++) {
+
+		if (compareMe[i] != str[i]) {
+			
+			if (shouldDelete)
+				delete [] compareMeCStr;
+
+			return false;
+
+		}
+	}
+
+	if (shouldDelete) {
+		delete[] compareMeCStr;
+
+	return true;
+}
+
+char toLower(char c) {
+
+    if ('A' <= c && c <= 'Z') {
+
+	    return c - 'A' + 'a';
+    } else {
+
+	    return c;
+    }
+}
+
+string toLower(string str) {
+
+	for (size_t i = 0; i < str.size(); i++) {
+
+		str[i] = toLower(str[i]);
+	}
+
+	return str;
+}
+
