@@ -17,4 +17,4 @@ int main()
     ShuntingYard sy(my_queue) ;
 
     return 0;
-};
+}
