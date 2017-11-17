@@ -1,17 +1,52 @@
-//
-// Created by Andrew Lvovsky on 11/15/17.
-//
-
 #include "../header/token.h"
 
-string CompositeToken::getString() {
-    return std::string();
+Token::Token() : status(error), str("") {}
+
+//Token::Token(string str, int status) : status(status), str(str) {}
+
+Token::Token(string str) : str(str) {
+
+    if (str == "&&" || str == "||") {
+
+        status = connector;
+
+    } else if (str == "(") {
+
+        status = leftParenthesis;
+
+    } else if (str == ")") {
+
+        status = rightParenthesis;
+
+    } else {
+
+        status = notYetRunCmd;
+    }
 }
 
-CompositeToken::status CommandToken::getStatus() {
-    return wasSuccess;
+void Token::setStatus(bool wasSuccessful) {
+
+    assert(status == notYetRunCmd);
+
+    if (wasSuccessful) {
+
+        this->status = successfulCmd;
+    } else {
+
+        this->status = failedCmd;
+    }
 }
 
-CompositeToken::status ConnectorToken::getStatus() {
-    return wasSuccess;
+int Token::getStatus() const {
+    return status;
+}
+
+string Token::toString() const {
+    return str;
+}
+
+ostream& operator <<(ostream& outs, const Token& printMe) {
+
+    outs << printMe.str << " | Enum " << printMe.status;
+    return outs;
 }

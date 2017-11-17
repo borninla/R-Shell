@@ -1,33 +1,38 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-
 #include <iostream>
 #include <string>
+#include <cassert>
 
 using namespace std;
 
-class CompositeToken
-{
-protected:
-    enum status { wasSuccess, notSuccess, notCommand, notYetRun };
-    string token;
-public:
-    virtual status getStatus() = 0;
-    string getString();
-};
-
-class CommandToken : public CompositeToken
+class Token
 {
 public:
-    status getStatus();
+    Token(); //don't use this please, ill-defined Token
+
+    //Token(string str, int status);//uncomment to manually set status
+
+    Token(string str); //infers status based on input
+
+    enum Status { successfulCmd, failedCmd, notYetRunCmd,
+        connector,
+        error,
+        leftParenthesis, rightParenthesis };
+
+    void setStatus(bool wasSuccessful); //can only set a notYetRunCmd
+
+    int getStatus() const;
+
+    string toString() const;
+
+    friend ostream& operator <<(ostream& outs, const Token& printMe);
+
+private:
+
+    int status;
+    const string str;
 };
 
-class ConnectorToken : public CompositeToken
-{
-public:
-    status getStatus();
-};
-
-
-#endif //TOKEN_H
+#endif // TOKEN_H
