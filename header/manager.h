@@ -31,7 +31,7 @@ private:
     //void populateQueue();
     bool _shouldExecute(string str, bool isFirstToken);
     void evaluate(string binExpression);
-    void evalPostFix(queue<string> postfix_queue);
+    void evalPostFix(queue<string>& postfix_queue);
 
     bool isFirstToken;
     bool wasSuccess;
