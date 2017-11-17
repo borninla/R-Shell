@@ -20,6 +20,8 @@ public:
      */
     Delim(char* cstr, char delim);
 
+    Delim(string str, string delim);
+
     bool done() const;
 
     friend Delim& operator >>(Delim& delim, string& str);
@@ -35,6 +37,7 @@ private:
      * @param delim the delimiter character
      */
     void _init(char* cstr, char delim);
+    void _init(string str, string delim);
     queue<string> q;
 };
 

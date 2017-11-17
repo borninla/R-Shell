@@ -10,6 +10,11 @@ Delim::Delim(char *cstr, char delim) {
     _init(cstr, delim);
 }
 
+Delim::Delim(string str, string delim) {
+
+    _init(str, delim);
+}
+
 bool Delim::done() const {
 
     return q.empty();
@@ -69,3 +74,12 @@ void Delim::_init(char *cstr, char delim) {
 
 }
 
+void Delim::_init(string str, string delim) {
+
+    if (str == "")
+        return;
+
+    assert(str.size() > delim.size());
+
+    
+}
