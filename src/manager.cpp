@@ -1,4 +1,4 @@
-#include "manager.h"
+#include "../header/manager.h"
 
 void Manager::run() {
 
@@ -12,15 +12,15 @@ void Manager::run() {
         line[cin.gcount()] = '\0';  //null-terminated
         cout << endl;
 
-        bool isFirstToken = true;
-
         string str;
         Delim d(line, ';');    //Constructor delimits line
 
         while(!d.done()) {
 
+            bool isFirstToken = true;
+
             //prepare command for parse()
-	    memset(command, 0, sizeof(command);
+            memset(command, 0, sizeof(command);
 
             //Extract from d and prepare a char*
             d >> str;
@@ -31,23 +31,23 @@ void Manager::run() {
 
             ShuntingYard sy(returnParsedData(str));
             queue<string> cmdAndConnectorQueue = sy.getReversePolish();
-	    //queue<CompToken*> TokenQueue = convToTokenQueue(cmdAndConnectorQueue);
+            //following queue might need to take CompToken* instead of CompToken
+            //queue<CompToken> TokenQueue = convToTokenQueue(cmdAndConnectorQueue);
 
-	    //Now, cmdAndConnectorQueue is in Reverse Polish
-	    //@TODO: evaluate!!
-	    
+            //Now, cmdAndConnectorQueue is in Reverse Polish
+            //@TODO: evaluate!!
+
 
             // get stack to take tokens from package queue to evaluate postfix notation
 
             /*
-	    //vv DEPRACATED			(but don't delete until properly replaced!)
+	        VVVVV DEPRACATED VVVVV		(but don't delete until properly replaced!)
             //Execute commands (or exit)
-           if (strcmp(command[0], "exit") == 0)
+            if (strcmp(command[0], "exit") == 0)
                 exit(0);
-	   //@TODO Utilize evaluateBinExpression() here!!
 
-           //if (_shouldExecute(str, isFirstToken))
-           //     execute(command);
+            //if (_shouldExecute(str, isFirstToken))
+            //     execute(command);
             */
 
 
@@ -64,7 +64,7 @@ void Manager::run() {
 
 /**
  * @brief Determines if connectors permit the execution of a command
- * @param str String of the form ** <cmd> (where ** denotes a connector, && or ||)
+ * @param str String of either form "<cmd> ** <cmd>" or "** <cmd>" (where ** denotes a connector, && or ||)
  * NOTE: wasSuccess must be properly updated from the previous command!!!!!!!!!!!!!
 **/
 bool Manager::_shouldExecute(string str, bool isFirstToken) {
@@ -79,7 +79,10 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
 
     //error check for connector being first token
     if (_isConnector(firstTwo) && isFirstToken)
+    {
         cerr << "Cannot execute commands with connectors as the first token" << endl;
+        assert(!_isConnector(firstTwo) || !isFirstToken);
+    }
 
     if (!_isConnector(firstTwo))
         return true;
@@ -87,8 +90,7 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
     //Now, we know that there is a connector present
 
     //Next step requires that wasSuccess has been updated!
-    return (wasSuccess && firstTwo == "&&")
-           || (!wasSuccess && firstTwo == "||");
+    return (wasSuccess && firstTwo == "&&") || (!wasSuccess && firstTwo == "||");
 
 }
 
@@ -120,7 +122,7 @@ void Manager::execute(char **command)
     }
     else
     {
-        while(wait(&status) != process_id);
+        while(wait(&status) != process_id); //not sure what this does yet
     }
 }
 
@@ -166,7 +168,11 @@ void Manager::parse(char *line, char **command)
     }
 }
 
-void Manager::evalPostFix(queue<string> postfix_queue)
+/**
+ * @brief Evaluates the queue (already in postfix notation)
+ * @param postfix_queue a queue that contains an expression in postfix notation
+ */
+void Manager::evalPostFix(queue<string>& postfix_queue)
 {
     stack<string> eval_stack;
     string stringToEval;
@@ -194,18 +200,6 @@ void Manager::evalPostFix(queue<string> postfix_queue)
     }
 }
 
-//char *op1, *op2, *result;
-//if command
-//if(strncmp(currentToken, "&&", 2) != 0 && strncmp(currentToken, "||", 2) != 0)
-//tokens.push(currentToken);
-//else
-//{
-//op2 = tokens.top();
-//tokens.pop();
-//op1 = tokens.top();
-//tokens.pop();
-//result =
-
 /**
  * @brief Evaluates a binary expression according to rules for && and ||
  * @param binExpression - expression of the form A ** B
@@ -213,27 +207,7 @@ void Manager::evalPostFix(queue<string> postfix_queue)
  *        and where ** is connector && or ||)
  * NOTE: Modifies Manager::wasSuccess
  */
-//void Manager::evaluate(string binExpression)
-//{
-//    queue<string> q = returnParsedData(binExpression);
-//
-//    string firstArg = q.front();
-//    q.pop();
-//
-//    execute(firstArg);  //modifies wasSuccess
-//
-//    string restOfExpression = q.dumpToStr() //returnParsedData to convert queue to str - shouldn't modify q!
-//
-//    if(_shouldExecute(restOfExpression))    //handles both && and ||
-//    {
-//        q.pop();                  //get rid of connector
-//        assert(q.size() == 1);    //last token should be executable command
-//        execute(q.front());
-//    }
-//}
-//
-
-void Manger::evaluate(string binExpression) {
+void Manager::evaluate(string binExpression) {
 
     queue<string> q = returnParsedData(binExpression);
 
@@ -244,11 +218,11 @@ void Manger::evaluate(string binExpression) {
 
     execute(firstArg);   //modifies wasSuccess
 
-    string restOfExpression = toDelimitedString(q);  //does not modify q
+    string restOfExpression = toSpaceDelimitedString(q, " ");  //does not modify q
 
     if(_shouldExecute(restOfExpression, false)) {
-        
+
         q.pop(); //get rid of connector
-	execute(q.front()); //q.front() is the last command
+        execute(q.front()); //q.front() is the last command
     }
 }

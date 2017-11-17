@@ -1,4 +1,4 @@
-#include "util.h"
+#include "../header/util.h"
 
 char* _copyStrToCharPtr(const string& str) {
 

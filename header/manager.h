@@ -26,12 +26,12 @@ public:
     void run();
 private:
     void execute(char **command);
-    void execute(const string& command);
+    void execute(string command);
     void parse(char *line, char **command);
     //void populateQueue();
     bool _shouldExecute(string str, bool isFirstToken);
     void evaluate(string binExpression);
-    void evalPostFix(queue<string> postfix_queue);
+    void evalPostFix(queue<string>& postfix_queue);
 
     bool isFirstToken;
     bool wasSuccess;
