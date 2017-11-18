@@ -22,3 +22,5 @@ bool equals(const char * cStr, string str, bool capsSensitive);
 char toLower(char c);
 
 string toLower(string str);
+
+string padDelim(string str, char delim);

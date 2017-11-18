@@ -168,3 +168,30 @@ string toLower(string str) {
 	return str;
 }
 
+string padDelim(string str, char delim) {
+
+    for (size_t i = 0; i < str.size(); i++) {
+
+        //Pad left of delim, if necessary
+        if (str[i] == delim
+	    && (i == 0 || str[i - 1] != ' ')) {//safe from i=0 by short-circuit evaluation
+
+	    string delimStr(1, ' ');
+	    str.insert(i, delimStr);
+
+	    i++;    //Keep up the loop with the insertion
+	}
+
+	//Pad right of delim, if necessary
+        if (str[i] == delim
+	    && (i == str.size() - 1 || str[i + 1] != ' ')) {
+
+	    string delimStr(1, ' ');
+	    str.insert(i + 1, delimStr);
+
+	    i++;
+	}
+    }
+
+    return str;
+}
