@@ -12,6 +12,7 @@
 #include <cassert>
 //#include <wait.h> //uncomment for hammer
 
+#include "token.h"
 #include "delim.h"
 #include "util.h"
 #include "shunting_yard.h"
@@ -31,7 +32,7 @@ private:
     //void populateQueue();
     bool _shouldExecute(string str, bool isFirstToken);
     void evaluate(string binExpression);
-    void evalPostFix(queue<string>& postfix_queue);
+    void evalPostFix(queue<string>& string_postfix_queue);
 
     bool isFirstToken;
     bool wasSuccess;

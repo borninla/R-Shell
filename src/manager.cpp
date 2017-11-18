@@ -170,29 +170,39 @@ void Manager::parse(char *line, char **command)
 
 /**
  * @brief Evaluates the queue (already in postfix notation)
- * @param postfix_queue a queue that contains an expression in postfix notation
+ * @param string_postfix_queue a queue that contains an expression in postfix notation
  */
-void Manager::evalPostFix(queue<string>& postfix_queue)
+void Manager::evalPostFix(queue<string>& string_postfix_queue)
 {
-    stack<string> eval_stack;
+    stack<Token> token_eval_stack;
     string stringToEval;
+    queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
 
-    wasSuccess = true;  //sets to true before going into the loop
+    //wasSuccess = true;  //sets to true before going into the loop
 
-    while(!postfix_queue.empty())
+    while(!token_postfix_queue.empty())
     {
-        if(postfix_queue.front() != "&&" && postfix_queue.front() != "||")  //if not connector
-            eval_stack.push(postfix_queue.front());
+        if(token_postfix_queue.front() != "&&" && token_postfix_queue.front() != "||")  //if not connector
+        {
+            token_eval_stack.push(token_postfix_queue.front());
+            token_postfix_queue.pop();
+        }
         else
         {
-            stringToEval = eval_stack.top() + " " + postfix_queue.front() + " ";
-            eval_stack.pop();
-            postfix_queue.pop();
-            stringToEval += eval_stack.top();   // [command] [connector] [command]
-            eval_stack.pop();
+            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
+            string op2 = token_eval_stack.top().toString();
+            token_eval_stack.pop();
+            string connector = token_postfix_queue.front().toString();
+            token_postfix_queue.pop();
+            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
+            string op1 = token_eval_stack.top().toString();
+
+            stringToEval = op1 + " " + connector + " " + op2;   // [command] [connector] [command]
+            //token_eval_stack.pop();
+
             evaluate(stringToEval);
 
-            if(wasSuccess)
+            if(!token_eval_stack.top().getStatus() == Token::successfulCmd)
             {
                 //@TODO: LEFT OFF HERE
             }
