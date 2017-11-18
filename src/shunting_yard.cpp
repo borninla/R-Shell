@@ -34,6 +34,21 @@ void ShuntingYard::run()
             //simply push that token into the stack
             connector_stack.push(currentToken);
         }
+
+        //@TODO: Add a check to see if num of left parenthesis = num of right parenthesis
+
+        if(currentToken == "(")
+            connector_stack.push(currentToken);
+
+        if(currentToken == ")")
+        {
+            while(connector_stack.top() != "(")
+            {
+                command_queue.push(connector_stack.top());
+                connector_stack.pop();
+            }
+            connector_stack.pop();  //pops left bracket
+        }
     }
 
     //once all tokens have been read, push the remaining connectors in the stack to the queue
