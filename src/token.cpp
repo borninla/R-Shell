@@ -50,3 +50,18 @@ ostream& operator <<(ostream& outs, const Token& printMe) {
     outs << printMe.str << " | Enum " << printMe.status;
     return outs;
 }
+
+queue<Token> stringsToTokens(queue<string> convMe) {
+
+    queue<Token> q;
+
+    while (!convMe.empty()) {
+
+        Token t(convMe.front());
+	q.push(t);
+	convMe.pop();
+
+    }
+
+    return q;
+}

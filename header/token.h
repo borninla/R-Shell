@@ -28,7 +28,8 @@ public:
     string toString() const;
 
     friend ostream& operator <<(ostream& outs, const Token& printMe);
-
+    
+    friend queue<Token> stringsToTokens(queue<string> convMe);
 private:
 
     int status;
