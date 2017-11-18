@@ -196,13 +196,14 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
             token_postfix_queue.pop();
             assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
             string op1 = token_eval_stack.top().toString();
+            token_eval_stack.pop();
 
             stringToEval = op1 + " " + connector + " " + op2;   // [command] [connector] [command]
             //token_eval_stack.pop();
 
             evaluate(stringToEval);
 
-            if(!token_eval_stack.top().getStatus() == Token::successfulCmd)
+            if(token_eval_stack.top().getStatus() != Token::successfulCmd)
             {
                 //@TODO: LEFT OFF HERE
             }
