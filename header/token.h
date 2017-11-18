@@ -30,6 +30,13 @@ public:
     friend ostream& operator <<(ostream& outs, const Token& printMe);
     
     friend queue<Token> stringsToTokens(queue<string> convMe);
+
+    friend bool operator ==(const Token& t, const string& str);
+    friend bool operator ==(const Token& t, const string& str);
+
+    friend bool operator !=(const Token& t, const string& str);
+    friend bool operator !=(const string& str, const Token& t);
+
 private:
 
     int status;

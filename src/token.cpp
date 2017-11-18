@@ -65,3 +65,23 @@ queue<Token> stringsToTokens(queue<string> convMe) {
 
     return q;
 }
+
+bool operator ==(const Token& t, const string& str) {
+
+    return t.toString() == str;
+}
+
+bool operator ==(const string& str, const Token& t) {
+
+    return str == t.toString();
+}
+
+bool operator !=(const Token& t, const string& str) {
+
+    return t.toString() != str;
+}
+
+bool operator !=(const string& str, const Token& t) {
+
+    return str == t.toString();
+}
