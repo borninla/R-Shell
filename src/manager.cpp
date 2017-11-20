@@ -3,7 +3,7 @@
 void Manager::run() {
 
     char line[1024];
-    char *command[64];
+    //char *command[64];
 
     while (true) {
 
@@ -20,7 +20,7 @@ void Manager::run() {
             bool isFirstToken = true;
 
             //prepare command for parse()
-            memset(command, 0, sizeof(command));
+            //memset(command, 0, sizeof(command));
 
             //Extract from d and prepare a char*
             d >> str;
@@ -34,29 +34,10 @@ void Manager::run() {
 
             ShuntingYard sy(returnParsedData(str));
             queue<string> cmdAndConnectorQueue = sy.getReversePolish();
-            //following queue might need to take CompToken* instead of CompToken
-            //queue<Token> TokenQueue = convToTokenQueue(cmdAndConnectorQueue);
-
-            //Now, cmdAndConnectorQueue is in Reverse Polish
-            //@TODO: evaluate!!
-
-
-            // get stack to take tokens from package queue to evaluate postfix notation
-
-            /*
-	        VVVVV DEPRACATED VVVVV		(but don't delete until properly replaced!)
-            //Execute commands (or exit)
-            if (strcmp(command[0], "exit") == 0)
-                exit(0);
-
-            //if (_shouldExecute(str, isFirstToken))
-            //     execute(command);
-            */
-
-
+            evalPostFix(cmdAndConnectorQueue);
 
             //Memory cleanup for future iterations
-            memset(command, 0, sizeof(command));
+            //memset(command, 0, sizeof(command));
             //delete [] currentToken;
             cout << endl;
 
@@ -205,11 +186,6 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
             //token_eval_stack.pop();
 
             evaluate(stringToEval);
-
-            if(token_eval_stack.top().getStatus() != Token::successfulCmd)
-            {
-                //@TODO: LEFT OFF HERE
-            }
         }
     }
 }
