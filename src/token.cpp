@@ -55,12 +55,11 @@ queue<Token> stringsToTokens(queue<string> convMe) {
 
     queue<Token> q;
 
-    while (!convMe.empty()) {
-
+    while (!convMe.empty())
+    {
         Token t(convMe.front());
-	q.push(t);
-	convMe.pop();
-
+	    q.push(t);
+	    convMe.pop();
     }
 
     return q;

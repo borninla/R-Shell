@@ -67,7 +67,6 @@ bool _isConnector(const string& str) {
 
 queue<string> returnParsedData(string parseThisString)
 {
-
     string newThis;
 
     queue<string> tokens;
@@ -93,12 +92,12 @@ queue<string> returnParsedData(string parseThisString)
     return tokens;
 }
 
-string toSpaceDelimitedString(queue<string> q, string delim) {
-
+string toSpaceDelimitedString(queue<string> q, string delim)
+{
     string concatenated = "";
 
     while (!q.empty()) {
-	
+
 	concatenated += q.front();
 	q.pop();
 
@@ -109,30 +108,30 @@ string toSpaceDelimitedString(queue<string> q, string delim) {
     return concatenated;
 }
 
-bool equals(const char * cStr, string str, bool capsSensitive) {
-
+bool equals(const char * cStr, string str, bool capsSensitive)
+{
 	string compareMeString;
-	char * compareMeCStr;
+	const char * compareMeCStr;
 	bool shouldDelete;
 
-	if (capsSensitive) {
-		
+	if (capsSensitive)
+    {
 		compareMeString = str;
-		compareMeChar = *cStr;
+		compareMeCStr = reinterpret_cast<char *>(*cStr);
 		shouldDelete = false;
-	} else {
-		
+	} else
+    {
+
 		compareMeCStr = _copyStrToCharPtr(toLower(str));
 		compareMeString = toLower(str);
 		shouldDelete = true;
 	}
 
+	for (size_t i = 0; i < compareMeString.size(); i++)
+    {
+		if (compareMeString[i] != compareMeCStr[i])
+        {
 
-
-	for (size_t i = 0; i < compareMeString.size(); i++) {
-
-		if (compareMe[i] != str[i]) {
-			
 			if (shouldDelete)
 				delete [] compareMeCStr;
 
@@ -141,14 +140,14 @@ bool equals(const char * cStr, string str, bool capsSensitive) {
 		}
 	}
 
-	if (shouldDelete) {
+	if (shouldDelete)
 		delete[] compareMeCStr;
 
 	return true;
 }
 
-char toLower(char c) {
-
+char toLower(char c)
+{
     if ('A' <= c && c <= 'Z') {
 
 	    return c - 'A' + 'a';
@@ -158,7 +157,8 @@ char toLower(char c) {
     }
 }
 
-string toLower(string str) {
+string toLower(string str)
+{
 
 	for (size_t i = 0; i < str.size(); i++) {
 
@@ -168,8 +168,8 @@ string toLower(string str) {
 	return str;
 }
 
-string padDelim(string str, char delim) {
-
+string padDelim(string str, char delim)
+{
     for (size_t i = 0; i < str.size(); i++) {
 
         //Pad left of delim, if necessary
@@ -182,7 +182,7 @@ string padDelim(string str, char delim) {
 	    i++;    //Keep up the loop with the insertion
 	}
 
-	//Pad right of delim, if necessary
+	    //Pad right of delim, if necessary
         if (str[i] == delim
 	    && (i == str.size() - 1 || str[i + 1] != ' ')) {
 

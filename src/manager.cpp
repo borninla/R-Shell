@@ -20,7 +20,7 @@ void Manager::run() {
             bool isFirstToken = true;
 
             //prepare command for parse()
-            memset(command, 0, sizeof(command);
+            memset(command, 0, sizeof(command));
 
             //Extract from d and prepare a char*
             d >> str;
@@ -29,10 +29,13 @@ void Manager::run() {
             if (str == "#")
                 continue;
 
+            str = padDelim(str,'(');
+            str = padDelim(str, ')');
+
             ShuntingYard sy(returnParsedData(str));
             queue<string> cmdAndConnectorQueue = sy.getReversePolish();
             //following queue might need to take CompToken* instead of CompToken
-            //queue<CompToken> TokenQueue = convToTokenQueue(cmdAndConnectorQueue);
+            //queue<Token> TokenQueue = convToTokenQueue(cmdAndConnectorQueue);
 
             //Now, cmdAndConnectorQueue is in Reverse Polish
             //@TODO: evaluate!!
