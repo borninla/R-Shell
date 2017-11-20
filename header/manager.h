@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <stack>
+#include <queue>
 #include <unistd.h>
 #include <cstring>
 #include <cstdlib>

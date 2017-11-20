@@ -195,3 +195,17 @@ string padDelim(string str, char delim)
 
     return str;
 }
+
+queue<Token> stringsToTokens(queue<string> convMe) {
+
+    queue<Token> q;
+
+    while (!convMe.empty())
+    {
+        Token t(convMe.front());
+        q.push(t);
+        convMe.pop();
+    }
+
+    return q;
+}

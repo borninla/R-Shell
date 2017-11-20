@@ -51,20 +51,6 @@ ostream& operator <<(ostream& outs, const Token& printMe) {
     return outs;
 }
 
-queue<Token> stringsToTokens(queue<string> convMe) {
-
-    queue<Token> q;
-
-    while (!convMe.empty())
-    {
-        Token t(convMe.front());
-	    q.push(t);
-	    convMe.pop();
-    }
-
-    return q;
-}
-
 bool operator ==(const Token& t, const string& str) {
 
     return t.toString() == str;

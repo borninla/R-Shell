@@ -3,6 +3,8 @@
 #include <climits>
 #include <queue>
 
+#include "token.h"
+
 using namespace std;
 
 char* _copyStrToCharPtr(const string& str);
@@ -24,3 +26,5 @@ char toLower(char c);
 string toLower(string str);
 
 string padDelim(string str, char delim);
+
+queue<Token> stringsToTokens(queue<string> convMe);
