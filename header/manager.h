@@ -11,7 +11,7 @@
 #include <string>
 #include <climits>
 #include <cassert>
-//#include <wait.h> //uncomment for hammer
+#include <sys/wait.h> //uncomment for hammer
 
 #include "token.h"
 #include "delim.h"

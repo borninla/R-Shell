@@ -19,10 +19,7 @@ void Manager::run() {
 
             bool isFirstToken = true;
 
-            //prepare command for parse()
-            //memset(command, 0, sizeof(command));
-
-            //Extract from d and prepare a char*
+            //Extract from d into str
             d >> str;
             str = str.substr(0, str.find('#') - 1);  //handle comments
             str = trim(str);                         //handle leading and trailing whitespace
@@ -32,16 +29,15 @@ void Manager::run() {
             str = padDelim(str,'(');
             str = padDelim(str, ')');
 
-            ShuntingYard sy(returnParsedData(str));
-            queue<string> cmdAndConnectorQueue = sy.getReversePolish();
-            evalPostFix(cmdAndConnectorQueue);
-
-            //Memory cleanup for future iterations
-            //memset(command, 0, sizeof(command));
-            //delete [] currentToken;
+            if(parenthesisChecker(str))
+            {
+                ShuntingYard sy(returnParsedData(str));
+                queue<string> cmdAndConnectorQueue = sy.getReversePolish();
+                evalPostFix(cmdAndConnectorQueue);
+            }
             cout << endl;
 
-            isFirstToken = false;
+            //isFirstToken = false;
         }
     }
 }
@@ -64,7 +60,6 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
     //error check for connector being first token
     if (_isConnector(firstTwo) && isFirstToken)
     {
-        cerr << "Cannot execute commands with connectors as the first token" << endl;
         assert(!_isConnector(firstTwo) || !isFirstToken);
     }
 
@@ -72,9 +67,12 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
         return true;
 
     //Now, we know that there is a connector present
-
+    //cout << "was it succ? " << wasSuccess << " " << "was it f: " << (firstTwo == "&&") << endl;
     //Next step requires that wasSuccess has been updated!
-    return (wasSuccess && firstTwo == "&&") || (!wasSuccess && firstTwo == "||");
+    bool runAnd = wasSuccess && (firstTwo == "&&");
+    bool runOr = !wasSuccess && firstTwo == "||";
+
+    return runAnd || runOr;
 
 }
 
@@ -82,30 +80,41 @@ void Manager::execute(char **command)
 {
     pid_t process_id;
     int status;
+    isFirstToken = false;//Whatever the outcome, all future tokens will not be the first
+    //cerr << "Setting isFirstToken = false !" << endl;
 
-    if (equals(*command, "exit", false))
+    if (equals(*command, "exit", false)){
+
+        //cerr << "Exiting!!" << endl;
         exit(0);
+    }
 
 
     if((process_id = fork()) < 0)   // if something went wrong with forking the process
     {
-        cerr << "ERROR: child process forking failed" << endl;
+        //cerr << "ERROR: child process forking failed" << endl;
+        //cerr << "In first block in execute()" << endl;
         exit(1);
     }
     else if (process_id == 0)       // if child process was created
     {
+        //cerr << "In second block in execute()" << endl;
+
         if(execvp(*command, command) < 0)
         {
-            cerr << "ERROR: command failed to execute" << endl;
+            cerr << "ERROR: command failed to execute()" << endl;
             wasSuccess = false;
         }
         else
         {
+            //cerr << "hey I ran, wasSuccess should be true" << endl;
             wasSuccess = true;
         }
     }
     else
     {
+        //cerr << "In third block in execute()" << endl;
+        wasSuccess = true;
         while(wait(&status) != process_id); //not sure what this does yet
     }
 }
@@ -117,6 +126,8 @@ void Manager::execute(string commandStr) {
     memset(cmd, 0, sizeof(cmd));
 
     parse(cStr, cmd);
+
+    //cerr << "Calling execute() with \"" << commandStr << "\"" << endl;
 
     execute(cmd);
 
@@ -162,8 +173,6 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
     string stringToEval;
     queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
 
-    //wasSuccess = true;  //sets to true before going into the loop
-
     while(!token_postfix_queue.empty())
     {
         if(token_postfix_queue.front() != "&&" && token_postfix_queue.front() != "||")  //if not connector
@@ -173,18 +182,29 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
         }
         else
         {
+            //@TODO: Replace with better code lol
+            if (token_eval_stack.size() == 1)
+            {
+                execute(token_eval_stack.top().toString());
+                break;
+            }
+
+            //Prepare the binary expression
             assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
             string op2 = token_eval_stack.top().toString();
             token_eval_stack.pop();
+
             string connector = token_postfix_queue.front().toString();
             token_postfix_queue.pop();
             assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
+
             string op1 = token_eval_stack.top().toString();
             token_eval_stack.pop();
 
             stringToEval = op1 + " " + connector + " " + op2;   // [command] [connector] [command]
             //token_eval_stack.pop();
 
+            //Evaluate the binary expression!
             evaluate(stringToEval);
         }
     }
@@ -210,7 +230,9 @@ void Manager::evaluate(string binExpression) {
 
     string restOfExpression = toSpaceDelimitedString(q, " ");  //does not modify q
 
-    if(_shouldExecute(restOfExpression, false)) {
+    bool shouldIExecute = _shouldExecute(restOfExpression, isFirstToken);
+
+    if(shouldIExecute) {
 
         q.pop(); //get rid of connector
         execute(q.front()); //q.front() is the last command

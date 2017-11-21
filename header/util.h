@@ -28,3 +28,5 @@ string toLower(string str);
 string padDelim(string str, char delim);
 
 queue<Token> stringsToTokens(queue<string> convMe);
+
+bool parenthesisChecker(string checkMe);

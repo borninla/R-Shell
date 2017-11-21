@@ -122,7 +122,7 @@ bool equals(const char * cStr, string str, bool capsSensitive)
 	} else
     {
 
-		compareMeCStr = _copyStrToCharPtr(toLower(str));
+		compareMeCStr = _copyStrToCharPtr(toLower(cStr));
 		compareMeString = toLower(str);
 		shouldDelete = true;
 	}
@@ -208,4 +208,17 @@ queue<Token> stringsToTokens(queue<string> convMe) {
     }
 
     return q;
+}
+
+bool parenthesisChecker(string checkMe)
+{
+    int leftNumOfParent = 0, rightNumOfParent = 0;
+
+    for(unsigned long leftPos = checkMe.find('(', 0); leftPos != string::npos; leftPos = checkMe.find('(', leftPos + 1))
+        leftNumOfParent++;
+
+    for(unsigned long rightPos = checkMe.find(')', 0); rightPos != string::npos; rightPos = checkMe.find(')', rightPos + 1))
+        rightNumOfParent++;
+
+    return leftNumOfParent == rightNumOfParent;
 }

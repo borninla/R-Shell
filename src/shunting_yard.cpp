@@ -35,8 +35,6 @@ void ShuntingYard::run()
             connector_stack.push(currentToken);
         }
 
-        //@TODO: Add a check to see if num of left parenthesis = num of right parenthesis
-
         if(currentToken == "(")
             connector_stack.push(currentToken);
 
