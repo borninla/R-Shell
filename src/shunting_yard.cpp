@@ -25,7 +25,7 @@ void ShuntingYard::run()
             //(&& ||, || ||, || &&, and && &&). However, since && takes precedence over ||, there is
             //only one case where that happens (if an && connector coming in from delivery is being compared
             //with an || connector at the top of the stack).
-            while(!connector_stack.empty() && (currentToken != "&&" || connector_stack.top() != "||"))
+            while(!connector_stack.empty())
             {
                 command_queue.push(connector_stack.top());
                 connector_stack.pop();

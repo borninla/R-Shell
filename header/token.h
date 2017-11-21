@@ -28,8 +28,11 @@ public:
 
     string toString() const;
 
-    friend ostream& operator <<(ostream& outs, const Token& printMe);
+    friend ostream& operator <<(ostream& outs, const Token& printMe) {
 
+        outs << printMe.str << " | Enum " << printMe.status;
+        return outs;
+    }
     friend bool operator ==(const Token& t, const string& str);
     friend bool operator ==(const Token& t, const string& str);
 

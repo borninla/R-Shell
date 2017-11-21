@@ -1,5 +1,23 @@
 #include "../header/manager.h"
 
+template <typename T>
+void printQueue(queue<T> printMe) {
+
+    cout << "PopFirst <====> PopLast" << endl;
+    cout << "{ ";
+
+    while (!printMe.empty()) {
+
+        T& printStr = printMe.front();
+
+        cout << "\"" << printStr << "\", ";
+
+        printMe.pop();
+    }
+
+    cout << "}";
+}
+
 void Manager::run() {
 
     char line[1024];
@@ -29,14 +47,19 @@ void Manager::run() {
             str = padDelim(str,'(');
             str = padDelim(str, ')');
 
+            if(str.substr(0, 4) == "exit")
+                exit(0);
+
             if(parenthesisChecker(str))
             {
                 ShuntingYard sy(returnParsedData(str));
                 queue<string> cmdAndConnectorQueue = sy.getReversePolish();
+                //printQueue(cmdAndConnectorQueue); //@TODO test cmdAndConnectorQueue
                 evalPostFix(cmdAndConnectorQueue);
-            }
-            cout << endl;
+            } else
+                cerr << "ERROR: Uneven number of parenthesis" << endl;
 
+            cout << endl;
             //isFirstToken = false;
         }
     }
@@ -172,6 +195,11 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
     stack<Token> token_eval_stack;
     string stringToEval;
     queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
+    cout << "Printing string_postfix_queue:" << endl;
+    printQueue(string_postfix_queue);
+    cout << endl
+         << "Printing token_postfix_queue:" << endl;
+    printQueue(token_postfix_queue);
 
     while(!token_postfix_queue.empty())
     {
@@ -238,3 +266,4 @@ void Manager::evaluate(string binExpression) {
         execute(q.front()); //q.front() is the last command
     }
 }
+

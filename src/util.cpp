@@ -210,6 +210,7 @@ queue<Token> stringsToTokens(queue<string> convMe) {
     return q;
 }
 
+//@TODO Need to make it work for ")(" (add stack implementation)
 bool parenthesisChecker(string checkMe)
 {
     int leftNumOfParent = 0, rightNumOfParent = 0;
@@ -222,3 +223,4 @@ bool parenthesisChecker(string checkMe)
 
     return leftNumOfParent == rightNumOfParent;
 }
+
