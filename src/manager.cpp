@@ -138,8 +138,11 @@ void Manager::execute(char **command)
     {
         //cerr << "In third block in execute()" << endl;
         wasSuccess = true;
-        while(wait(&status) != process_id); //not sure what this does yet
-    }
+        while(wait(&status) != process_id);
+
+        if(WIFEXITED(status))
+            wasSuccess = false;
+    } //not sure what this does yet
 }
 
 void Manager::execute(string commandStr) {
@@ -195,11 +198,11 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
     stack<Token> token_eval_stack;
     string stringToEval;
     queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
-    cout << "Printing string_postfix_queue:" << endl;
-    printQueue(string_postfix_queue);
-    cout << endl
-         << "Printing token_postfix_queue:" << endl;
-    printQueue(token_postfix_queue);
+//    cout << "Printing string_postfix_queue:" << endl;
+//    printQueue(string_postfix_queue);
+//    cout << endl
+//         << "Printing token_postfix_queue:" << endl;
+//    printQueue(token_postfix_queue);
 
     while(!token_postfix_queue.empty())
     {
@@ -210,13 +213,6 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
         }
         else
         {
-            //@TODO: Replace with better code lol
-            if (token_eval_stack.size() == 1)
-            {
-                execute(token_eval_stack.top().toString());
-                break;
-            }
-
             //Prepare the binary expression
             assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
             string op2 = token_eval_stack.top().toString();
@@ -235,6 +231,12 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
             //Evaluate the binary expression!
             evaluate(stringToEval);
         }
+    }
+
+    //@TODO: Replace with better code lol
+    if (token_eval_stack.size() == 1)
+    {
+        execute(token_eval_stack.top().toString());
     }
 }
 
