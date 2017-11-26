@@ -140,7 +140,7 @@ void Manager::execute(char **command)
         wasSuccess = true;
         while(wait(&status) != process_id);
 
-        if(WIFEXITED(status))
+        if(WEXITSTATUS(status))
             wasSuccess = false;
     } //not sure what this does yet
 }
