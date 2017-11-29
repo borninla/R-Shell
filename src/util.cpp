@@ -210,17 +210,25 @@ queue<Token> stringsToTokens(queue<string> convMe) {
     return q;
 }
 
-//@TODO Need to make it work for ")(" (add stack implementation)
 bool parenthesisChecker(string checkMe)
 {
-    int leftNumOfParent = 0, rightNumOfParent = 0;
+    stack<char> s;
 
-    for(unsigned long leftPos = checkMe.find('(', 0); leftPos != string::npos; leftPos = checkMe.find('(', leftPos + 1))
-        leftNumOfParent++;
+    for (size_t i = 0; i < checkMe.size(); i++) {
 
-    for(unsigned long rightPos = checkMe.find(')', 0); rightPos != string::npos; rightPos = checkMe.find(')', rightPos + 1))
-        rightNumOfParent++;
+        if (checkMe[i] == '(')
+	    s.push('(');
 
-    return leftNumOfParent == rightNumOfParent;
+	else if (checkMe[i] == ')') {
+
+            if (s.empty() || s.top() != '(')
+                return false;
+
+	    s.pop();
+	}
+
+    }
+
+    return s.empty();
 }
 

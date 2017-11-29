@@ -2,6 +2,7 @@
 #include <string>
 #include <climits>
 #include <queue>
+#include <stack>
 
 #include "token.h"
 
