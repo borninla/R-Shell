@@ -92,7 +92,7 @@ queue<string> returnParsedData(string parseThisString)
     return tokens;
 }
 
-string toSpaceDelimitedString(queue<string> q, string delim)
+string toDelimitedString(queue<string> q, string delim)
 {
     string concatenated = "";
 
