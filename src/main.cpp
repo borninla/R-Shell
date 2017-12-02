@@ -7,8 +7,10 @@ using namespace std;
 
 int main()
 {
-    Manager m;
-    m.run();
+//    Manager m;
+//    m.run();
+
+    cout << "Hello world!" << endl;
 
     //cout << parenthesisChecker("echo a || echo b && echo c && echo d || echo e || echo f") << endl;
 

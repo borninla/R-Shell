@@ -101,7 +101,7 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
 
 }
 
-//@TODO: Finish refactoring
+//@TODO: Verify that refactoring was correct
 bool Manager::_shouldExecute(vector<Token> expr) {
 
     if (expr.size() != 1 && expr.size() != 3)
@@ -109,8 +109,12 @@ bool Manager::_shouldExecute(vector<Token> expr) {
 
     if(expr.size() == 1) //Unary expression
         return expr[0].getStatus() == Token::notYetRunCmd;
-    else    //binary expression
-        return expr[0].getStatus() == Token::notYetRunCmd && expr[2].getStatus() == Token::notYetRunCmd;
+    else {    //binary expression
+//        return expr[0].getStatus() == Token::notYetRunCmd && expr[2].getStatus() == Token::notYetRunCmd;
+
+        return (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&"
+                || expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||");
+    }
 }
 
 void Manager::execute(char **command)

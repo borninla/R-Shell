@@ -2,9 +2,9 @@
 
 Token::Token() : status(error), str("") {}
 
-Token::Token(string str, int status) : status(status), str(str) {}
+Token::Token(string str, int status) : status(status), str(trim(str)) {}
 
-Token::Token(string str) : str(str) {
+Token::Token(string str) : str(trim(str)) {
 
     if (str == "&&" || str == "||") {
 

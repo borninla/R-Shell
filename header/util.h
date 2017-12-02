@@ -18,7 +18,7 @@ bool _isConnector(const string& str);
 
 queue<string> returnParsedData(string parseThisString);
 
-string toSpaceDelimitedString(queue<string> q, string delim);
+string toDelimitedString(queue<string> q, string delim);
 
 bool equals(const char * cStr, string str, bool capsSensitive);
 
