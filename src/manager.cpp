@@ -210,7 +210,7 @@ void Manager::parse(char *line, char **command)
 void Manager::evalPostFix(queue<string>& string_postfix_queue)
 {
     stack<Token> token_eval_stack;
-    string stringToEval;
+    vector<Token> vectorToEval;
     queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
 //    cout << "Printing string_postfix_queue:" << endl;
 //    printQueue(string_postfix_queue);
@@ -246,13 +246,13 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
 //            string op1 = token_eval_stack.top().toString();
             token_eval_stack.pop();
 
-            stringToEval = op1.toString() + " "
-                           + connector.toString() + " "
-                           + op2.toString();   // [command] [connector] [command]
-            //token_eval_stack.pop();
+            // [command] [connector] [command]
+            vectorToEval.push_back(op1);
+            vectorToEval.push_back(connector);
+            vectorToEval.push_back(op2);
 
             //Evaluate the binary expression!
-            evaluate(stringToEval); //updates wasSuccess
+            evaluate(vectorToEval); //updates wasSuccess
 
             //Push result onto the stack
             if (wasSuccess) {
@@ -279,26 +279,15 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
  *        and where ** is connector && or ||)
  * NOTE: Modifies Manager::wasSuccess
  */
-void Manager::evaluate(string binExpression) {
+void Manager::evaluate(vector<Token> binExpression)
+{
+    assert(binExpression.size() == 3);  //first command, connector, last command
 
-    queue<string> q = returnParsedData(binExpression);
+    Token firstArg = binExpression[0];
+    execute(firstArg.toString());   //modifies wasSuccess
 
-    assert(q.size() == 3);  //first command, connector, last command
-
-    string firstArg = q.front();
-    q.pop();
-
-    execute(firstArg);   //modifies wasSuccess
-
-    string restOfExpression = toSpaceDelimitedString(q, " ");  //does not modify q
-
-    bool shouldIExecute = _shouldExecute(restOfExpression, isFirstToken);
-
-    if(shouldIExecute) {
-
-        q.pop(); //get rid of connector
-        execute(q.front()); //q.front() is the last command
-    }
+    if(_shouldExecute(binExpression))
+        execute(binExpression[2].toString()); //q.front() is the last command
 }
 
 //void checkForQuotes()
