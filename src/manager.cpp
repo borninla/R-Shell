@@ -47,6 +47,8 @@ void Manager::run() {
             str = padDelim(str,'(');
             str = padDelim(str, ')');
 
+            //checkForQuotes();
+
             if(str.substr(0, 4) == "exit")
                 exit(0);
 
@@ -99,6 +101,18 @@ bool Manager::_shouldExecute(string str, bool isFirstToken) {
 
 }
 
+//@TODO: Finish refactoring
+bool Manager::_shouldExecute(vector<Token> expr) {
+
+    if (expr.size() != 1 && expr.size() != 3)
+        return false;
+
+    if(expr.size() == 1) //Unary expression
+        return expr[0].getStatus() == Token::notYetRunCmd;
+    else    //binary expression
+        return expr[0].getStatus() == Token::notYetRunCmd && expr[2].getStatus() == Token::notYetRunCmd;
+}
+
 void Manager::execute(char **command)
 {
     pid_t process_id;
@@ -140,7 +154,7 @@ void Manager::execute(char **command)
         wasSuccess = true;
         while(wait(&status) != process_id);
 
-        if(WEXITSTATUS(status))
+        if(WEXITSTATUS(status)) //if it wasn't successful
             wasSuccess = false;
     } //not sure what this does yet
 }
@@ -206,30 +220,48 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
 
     while(!token_postfix_queue.empty())
     {
-        if(token_postfix_queue.front() != "&&" && token_postfix_queue.front() != "||")  //if not connector
+//        if(token_postfix_queue.front() != "&&" && token_postfix_queue.front() != "||")  //if not connector
+        if (token_postfix_queue.front().getStatus() != Token::connector)
         {
             token_eval_stack.push(token_postfix_queue.front());
             token_postfix_queue.pop();
         }
-        else
+        else //if token is an operator
         {
             //Prepare the binary expression
-            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
-            string op2 = token_eval_stack.top().toString();
+
+
+            //@TODO: Put back asserts if seg fault isnt fixed
+            //assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
+//            string op2 = token_eval_stack.top().toString();
+            Token op2 = token_eval_stack.top();
             token_eval_stack.pop();
 
-            string connector = token_postfix_queue.front().toString();
+//            string connector = token_postfix_queue.front();
+            Token connector = token_postfix_queue.front();
             token_postfix_queue.pop();
-            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
+            //assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
 
-            string op1 = token_eval_stack.top().toString();
+            Token op1 = token_eval_stack.top();
+//            string op1 = token_eval_stack.top().toString();
             token_eval_stack.pop();
 
-            stringToEval = op1 + " " + connector + " " + op2;   // [command] [connector] [command]
+            stringToEval = op1.toString() + " "
+                           + connector.toString() + " "
+                           + op2.toString();   // [command] [connector] [command]
             //token_eval_stack.pop();
 
             //Evaluate the binary expression!
-            evaluate(stringToEval);
+            evaluate(stringToEval); //updates wasSuccess
+
+            //Push result onto the stack
+            if (wasSuccess) {
+                Token t("", Token::successfulCmd);
+                token_eval_stack.push(t);
+            } else {
+                Token t("", Token::failedCmd);
+                token_eval_stack.push(t);
+            }
         }
     }
 
@@ -269,3 +301,4 @@ void Manager::evaluate(string binExpression) {
     }
 }
 
+//void checkForQuotes()

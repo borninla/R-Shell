@@ -11,6 +11,7 @@
 #include <string>
 #include <climits>
 #include <cassert>
+#include <vector>
 #include <sys/wait.h> //uncomment for hammer
 
 #include "token.h"
@@ -32,6 +33,7 @@ private:
     void parse(char *line, char **command);
     //void populateQueue();
     bool _shouldExecute(string str, bool isFirstToken);
+    bool _shouldExecute(vector<Token> expr);
     void evaluate(string binExpression);
     void evalPostFix(queue<string>& string_postfix_queue);
 
