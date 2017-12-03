@@ -16,6 +16,9 @@ char* _copyStrToCharPtr(const string& str) {
 
 string trim(const string& trimMe) {
 
+    if(trimMe == "")  //needed for when dummy Tokens are created (with empty string) during postfix evaluation
+        return trimMe;
+
     string whitespace = " \n\t";
     string newStr;
 

@@ -5,6 +5,7 @@
 #include <stack>
 
 #include "token.h"
+class Token;    //Token constructor uses trim, so there is circular dependency
 
 using namespace std;
 

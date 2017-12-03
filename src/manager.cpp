@@ -121,7 +121,8 @@ void Manager::execute(char **command)
 {
     pid_t process_id;
     int status;
-    isFirstToken = false;//Whatever the outcome, all future tokens will not be the first
+    isFirstToken = false;   //Whatever the outcome, all future tokens will not be the first
+
     //cerr << "Setting isFirstToken = false !" << endl;
 
     if (equals(*command, "exit", false)){
