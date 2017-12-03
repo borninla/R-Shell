@@ -112,8 +112,8 @@ bool Manager::_shouldExecute(vector<Token> expr) {
     else {    //binary expression
 //        return expr[0].getStatus() == Token::notYetRunCmd && expr[2].getStatus() == Token::notYetRunCmd;
 
-        return (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&"
-                || expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||");
+        return ( (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&")
+                || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
     }
 }
 

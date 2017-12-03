@@ -1,6 +1,7 @@
 #ifndef SHUNTING_YARD_H
 #define SHUNTING_YARD_H
 
+
 #include <iostream>
 #include <stack>
 #include <queue>
@@ -19,9 +20,6 @@ public:
 private:
     queue<string> delivery, command_queue;
     stack<string> connector_stack;
-
-//    const int AND_PRECEDENCE = 2;
-//    const int OR_PRECEDENCE = 1;
 };
 
 

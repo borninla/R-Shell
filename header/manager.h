@@ -21,8 +21,6 @@
 #include "util.h"
 #include "shunting_yard.h"
 
-
-
 using namespace std;
 
 class Manager

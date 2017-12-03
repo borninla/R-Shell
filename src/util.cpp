@@ -196,7 +196,8 @@ string padDelim(string str, char delim)
     return str;
 }
 
-queue<Token> stringsToTokens(queue<string> convMe) {
+queue<Token> stringsToTokens(queue<string> convMe)
+{
 
     queue<Token> q;
 

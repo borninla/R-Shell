@@ -61,21 +61,3 @@ queue<string> ShuntingYard::getReversePolish()
 {
     return command_queue;
 }
-
-//    //debug print for comparing notations
-//    cout << "Original prompt: " << delivery << endl;
-//    cout << " Reverse polish: " ;
-//
-//    while (!command_queue.empty()) {
-//        cout << command_queue.front() << " ";
-//        command_queue.pop();
-//    }
-
-//debug for checking what strncmp is returning
-//        cout << char_delivery << " &&: " << strncmp(char_delivery, "&&", 2) << " ||: ";
-//        cout << strncmp(char_delivery, "||", 2) << endl;
-
-//            cout << connector_stack.top() << endl;
-//
-//            cout << "does " << char_delivery << " = ||? " << strncmp(char_delivery, "||", 2) << " ";
-//            cout << "does " << connector_stack.top() << " = &&? " << strncmp(connector_stack.top(), "&&", 2) << " " << endl;
