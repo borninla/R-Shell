@@ -26,7 +26,7 @@ Token::Token(string str) : str(trim(str)) {
 
 void Token::setStatus(bool wasSuccessful) {
 
-    assert(status == notYetRunCmd);
+    //assert(status == notYetRunCmd);   //hey Ryan, do we really need this? @TODO Follow up with Ryan
 
     if (wasSuccessful) {
 

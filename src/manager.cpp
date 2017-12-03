@@ -111,7 +111,7 @@ bool Manager::_shouldExecute(vector<Token> expr) {
         return expr[0].getStatus() == Token::notYetRunCmd;
     else //binary expression
         return ( (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&")
-                || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
+                 || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
 }
 
 void Manager::execute(char **command)
@@ -255,6 +255,7 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
 
             //Evaluate the binary expression!
             evaluate(vectorToEval); //updates wasSuccess
+            vectorToEval.clear();   //clears vector for next bin expression
 
             //Push result onto the stack
             if (wasSuccess) {
@@ -285,7 +286,8 @@ void Manager::evaluate(vector<Token> binExpression)
 {
     assert(binExpression.size() == 3);  //first command, connector, last command
 
-    execute(binExpression[0].toString());   //modifies wasSuccess
+    if(binExpression[0].toString() != "")
+        execute(binExpression[0].toString());   //modifies wasSuccess
 
     binExpression[0].setStatus(wasSuccess);
 
