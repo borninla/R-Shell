@@ -17,7 +17,6 @@ void Manager::run() {
 
         while(!d.done())
         {
-            //Extract from d into tok to prepare for further tokenizing
             d >> thisLine;
 
             cout << "thisLine: " << thisLine.toString() << endl
