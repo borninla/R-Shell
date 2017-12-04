@@ -31,16 +31,11 @@ private:
     void execute(char **command);
     void execute(string command);
     void parse(char *line, char **command);
-    //void populateQueue();
-    bool _shouldExecute(string str, bool isFirstToken);
-    bool _shouldExecute(vector<Token> expr);
+    bool shouldExecute(vector<Token> expr);
     void evaluate(vector<Token> binExpression);
     void evalPostFix(queue<string>& string_postfix_queue);
 
-    bool isFirstToken;
     bool wasSuccess;
-    stack<char*> tokens;
-
 };
 
 

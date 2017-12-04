@@ -1,23 +1,5 @@
 #include "../header/manager.h"
 
-template <typename T>
-void printQueue(queue<T> printMe) {
-
-    cout << "PopFirst <====> PopLast" << endl;
-    cout << "{ ";
-
-    while (!printMe.empty()) {
-
-        T& printStr = printMe.front();
-
-        cout << "\"" << printStr << "\", ";
-
-        printMe.pop();
-    }
-
-    cout << "}";
-}
-
 void Manager::run() {
 
     char line[1024];
@@ -33,21 +15,21 @@ void Manager::run() {
         string str;
         Delim d(line, ';');    //Constructor delimits line
 
-        while(!d.done()) {
-
-            bool isFirstToken = true;
-
+        while(!d.done())
+        {
             //Extract from d into str
             d >> str;
+
+            //quote check should happen here
+            //checkForQuotes();
+
             str = str.substr(0, str.find('#') - 1);  //handle comments
             str = trim(str);                         //handle leading and trailing whitespace
             if (str == "#")
                 continue;
 
-            str = padDelim(str,'(');
+            str = padDelim(str, '(');
             str = padDelim(str, ')');
-
-            //checkForQuotes();
 
             if(str.substr(0, 4) == "exit")
                 exit(0);
@@ -56,53 +38,21 @@ void Manager::run() {
             {
                 ShuntingYard sy(returnParsedData(str));
                 queue<string> cmdAndConnectorQueue = sy.getReversePolish();
-                //printQueue(cmdAndConnectorQueue); //@TODO test cmdAndConnectorQueue
                 evalPostFix(cmdAndConnectorQueue);
             } else
                 cerr << "ERROR: Uneven number of parenthesis" << endl;
 
             cout << endl;
-            //isFirstToken = false;
         }
     }
 }
 
 /**
  * @brief Determines if connectors permit the execution of a command
- * @param str String of either form "<cmd> ** <cmd>" or "** <cmd>" (where ** denotes a connector, && or ||)
+ * @param vector of Tokens of either form "<cmd> ** <cmd>" or "** <cmd>" (where ** denotes a connector, && or ||)
  * NOTE: wasSuccess must be properly updated from the previous command!!!!!!!!!!!!!
 **/
-bool Manager::_shouldExecute(string str, bool isFirstToken) {
-
-    str = trim(str);
-
-    //if there are no connectors to test, return true
-    if (str.size() < 2)
-        return true;
-
-    string firstTwo = str.substr(0, 2);
-
-    //error check for connector being first token
-    if (_isConnector(firstTwo) && isFirstToken)
-    {
-        assert(!_isConnector(firstTwo) || !isFirstToken);
-    }
-
-    if (!_isConnector(firstTwo))
-        return true;
-
-    //Now, we know that there is a connector present
-    //cout << "was it succ? " << wasSuccess << " " << "was it f: " << (firstTwo == "&&") << endl;
-    //Next step requires that wasSuccess has been updated!
-    bool runAnd = wasSuccess && (firstTwo == "&&");
-    bool runOr = !wasSuccess && firstTwo == "||";
-
-    return runAnd || runOr;
-
-}
-
-//@TODO: Verify that refactoring was correct
-bool Manager::_shouldExecute(vector<Token> expr) {
+bool Manager::shouldExecute(vector<Token> expr) {
 
     if (expr.size() != 1 && expr.size() != 3)
         return false;
@@ -118,9 +68,6 @@ void Manager::execute(char **command)
 {
     pid_t process_id;
     int status;
-    isFirstToken = false;   //Whatever the outcome, all future tokens will not be the first
-
-    //cerr << "Setting isFirstToken = false !" << endl;
 
     if (equals(*command, "exit", false)){
 
@@ -214,11 +161,6 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
     stack<Token> token_eval_stack;
     vector<Token> vectorToEval;
     queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
-//    cout << "Printing string_postfix_queue:" << endl;
-//    printQueue(string_postfix_queue);
-//    cout << endl
-//         << "Printing token_postfix_queue:" << endl;
-//    printQueue(token_postfix_queue);
 
     while(!token_postfix_queue.empty())
     {
@@ -291,7 +233,7 @@ void Manager::evaluate(vector<Token> binExpression)
 
     binExpression[0].setStatus(wasSuccess);
 
-    if(_shouldExecute(binExpression))
+    if(shouldExecute(binExpression))
         execute(binExpression[2].toString()); //q.front() is the last command
 }
 
