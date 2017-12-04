@@ -78,8 +78,8 @@ void Manager::execute(char **command)
         exit(0);
     }
 
-
-    if((process_id = fork()) < 0)   // if something went wrong with forking the process
+    cerr << "Would be running execute() here!!" << endl;
+    /*if((process_id = fork()) < 0)   // if something went wrong with forking the process
     {
         //cerr << "ERROR: child process forking failed" << endl;
         //cerr << "In first block in execute()" << endl;
@@ -108,7 +108,7 @@ void Manager::execute(char **command)
 
         if(WEXITSTATUS(status)) //if it wasn't successful
             wasSuccess = false;
-    } //not sure what this does yet
+    } //not sure what this does yet*/
 }
 
 void Manager::execute(string commandStr) {
