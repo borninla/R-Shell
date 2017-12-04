@@ -6,6 +6,9 @@
 #include <string>
 #include <cassert>
 
+#include "token.h"
+#include "util.h"
+
 using namespace std;
 
 class Delim
@@ -18,13 +21,16 @@ public:
      * @param cstr Null-terminated cstring
      * @param delim
      */
-    Delim(char* cstr, char delim);
+    Delim(char* cstr, char delim, bool quotesSeparately);
 
-    Delim(string str, string delim);
+//    Delim(string str, string delim);
+
+    Delim(string str, char delim, bool quotesSeparately);
 
     bool done() const;
 
-    friend Delim& operator >>(Delim& delim, string& str);
+    friend Delim& operator >>(Delim& delim, Token& t);
+//    friend Delim& operator >>(Delim& delim, string& str);
 
     void dumpToConsole();
 
@@ -36,9 +42,14 @@ private:
      * @param cstr Takes the contents of cstr, and populates the queue q within this object
      * @param delim the delimiter character
      */
-    void _init(char* cstr, char delim);
-    void _init(string str, string delim);
-    queue<string> q;
+    void _init(char* cstr, char delim, bool quotesSeparately);
+//    void _init(string str, string delim, bool quotesSeparately);
+
+    bool _properQuotes(string str);
+    bool _properQuotes(char* c);
+
+    queue<Token> q;
+    bool quotesSeparately;
 };
 
 #endif // DELIM_H
