@@ -17,7 +17,7 @@ string _parseUntilConnector(string& parseThis);
 
 bool _isConnector(const string& str);
 
-queue<string> returnParsedData(string parseThisString);
+//queue<Token> returnParsedData(string parseThisString);
 
 string toDelimitedString(queue<string> q, string delim);
 
@@ -31,6 +31,4 @@ string padDelim(string str, char delim);
 
 queue<Token> stringsToTokens(queue<string> convMe);
 
-bool parenthesisChecker(string checkMe);
-
-bool quotesChecker(string checkMe);
+bool parenthesisChecker(queue<Token> checkMe);

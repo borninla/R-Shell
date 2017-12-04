@@ -15,7 +15,6 @@
 #include <sys/types.h>
 //#include <sys/wait.h> //uncomment for hammer
 
-
 #include "token.h"
 #include "delim.h"
 #include "util.h"
@@ -33,7 +32,7 @@ private:
     void parse(char *line, char **command);
     bool shouldExecute(vector<Token> expr);
     void evaluate(vector<Token> binExpression);
-    void evalPostFix(queue<string>& string_postfix_queue);
+    void evalPostFix(queue<Token>& string_postfix_queue);
 
     bool wasSuccess;
 };

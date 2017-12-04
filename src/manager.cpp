@@ -4,43 +4,46 @@ void Manager::run() {
 
     char line[1024];
 
-    while (true) {
-
+    while(true)
+    {
         cout << "$ ";
         cin.getline(line, 1024 + 1);
         line[cin.gcount()] = '\0';  //null-terminated
         cout << endl;
 
-        string str;
-        Delim d(line, ';');    //Constructor delimits line
+        Token tok;
+        queue<Token> tokens;
+        Delim d(line, ';', false);    //Constructor delimits line
 
         while(!d.done())
         {
-            //Extract from d into str
-            d >> str;
+            //Extract from d into tok to prepare for further tokenizing
+            d >> tok;
+            Delim dd(tok.toString(), ' ', true);
 
-            //quote check should happen here
-            //checkForQuotes();
-
-            str = str.substr(0, str.find('#') - 1);  //handle comments
-            str = trim(str);                         //handle leading and trailing whitespace
-            if (str == "#")
-                continue;
-
-            //delimits parenthesis to get ready for parenthesisChecker
-            str = padDelim(str, '(');
-            str = padDelim(str, ')');
-
-            if(str.substr(0, 4) == "exit")
-                exit(0);
-
-            if(parenthesisChecker(str) && quotesChecker(str))
+            while(!dd.done())
             {
-                ShuntingYard sy(returnParsedData(str));
-                queue<string> cmdAndConnectorQueue = sy.getReversePolish();
-                evalPostFix(cmdAndConnectorQueue);
-            } else
-                cerr << "ERROR: Uneven number of parenthesis/quotes" << endl;
+                dd >> tok;
+                tokens.push(tok);
+            }
+
+            //@TODO: paren and comment check will be handled in delim constructor
+            //delimits parenthesis to get ready for parenthesisChecker
+//            str = padDelim(str, '(');
+//            str = padDelim(str, ')');
+
+//            str = str.substr(0, str.find('#') - 1);  //handle comments
+//            str = trim(str);                         //handle leading and trailing whitespace
+//            if (str == "#")
+//                continue;
+
+//            if(parenthesisChecker(tokens))
+//            {
+                ShuntingYard sy(tokens);
+                queue<Token> evalQueue = sy.getReversePolish();
+                evalPostFix(evalQueue);
+//            } else
+//                cerr << "ERROR: Uneven number of parenthesis/quotes" << endl;
 
             cout << endl;
         }
@@ -156,11 +159,10 @@ void Manager::parse(char *line, char **command)
  * @brief Evaluates the queue (already in postfix notation)
  * @param string_postfix_queue a queue that contains an expression in postfix notation
  */
-void Manager::evalPostFix(queue<string>& string_postfix_queue)
+void Manager::evalPostFix(queue<Token>& token_postfix_queue)
 {
     stack<Token> token_eval_stack;
     vector<Token> vectorToEval;
-    queue<Token> token_postfix_queue = stringsToTokens(string_postfix_queue);
 
     while(!token_postfix_queue.empty())
     {
@@ -228,13 +230,12 @@ void Manager::evaluate(vector<Token> binExpression)
 {
     assert(binExpression.size() == 3);  //first command, connector, last command
 
-    if(!binExpression[0].toString().empty())
+    if(binExpression[0].getStatus() == Token::notYetRunCmd)
+    {
         execute(binExpression[0].toString());   //modifies wasSuccess
-
-    binExpression[0].setStatus(wasSuccess);
+        binExpression[0].setStatus(wasSuccess);
+    }
 
     if(shouldExecute(binExpression))
         execute(binExpression[2].toString()); //q.front() is the last command
 }
-
-//void checkForQuotes()

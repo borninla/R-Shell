@@ -14,12 +14,12 @@ using namespace std;
 class ShuntingYard
 {
 public:
-    ShuntingYard(queue<string> command);
+    ShuntingYard(queue<Token> command);
     void run();
-    queue<string> getReversePolish();
+    queue<Token> getReversePolish();
 private:
-    queue<string> delivery, command_queue;
-    stack<string> connector_stack;
+    queue<Token> delivery, command_queue;
+    stack<Token> connector_stack;
 };
 
 

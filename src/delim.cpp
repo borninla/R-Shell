@@ -16,6 +16,7 @@ Delim::Delim(string str, string delim, quotesSeparately) {
     _init(str, delim, quoteSeparately);
 }*/
 
+// @TODO: Have constructor tokenize parenthesis (replaces padDelim)
 Delim::Delim(string str, char delim, bool quotesSeparately) {
 
     char* c = _copyStrToCharPtr(str);
@@ -23,8 +24,8 @@ Delim::Delim(string str, char delim, bool quotesSeparately) {
     delete [] c;
 }
 
-bool Delim::done() const {
-
+bool Delim::done() const
+{
     return q.empty();
 }
 
@@ -61,8 +62,6 @@ void Delim::dumpToConsole() {
 void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
 
     this->quotesSeparately = quotesSeparately;
-
-
 
     if (cstr == NULL)
         return;

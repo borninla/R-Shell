@@ -1,6 +1,6 @@
 #include "../header/shunting_yard.h"
 
-ShuntingYard::ShuntingYard(queue<string> command)
+ShuntingYard::ShuntingYard(queue<Token> command)
 {
     delivery = command;
     run();
@@ -10,11 +10,11 @@ void ShuntingYard::run()
 {
     while(!delivery.empty())    //while there are still tokens to be read
     {
-        string currentToken = delivery.front();
+        Token currentToken = delivery.front();
         delivery.pop();
 
-        //if token is a command, push it in the command stack
-        if(currentToken != "&&" && currentToken != "||")
+        //if token is a command, push it into the command stack
+        if(currentToken.getStatus() == Token::notYetRunCmd || currentToken.getStatus() == Token::quote)
             command_queue.push(currentToken);
         else
         {
@@ -35,10 +35,10 @@ void ShuntingYard::run()
             connector_stack.push(currentToken);
         }
 
-        if(currentToken == "(")
+        if(currentToken.getStatus() == Token::leftParenthesis)
             connector_stack.push(currentToken);
 
-        if(currentToken == ")")
+        if(currentToken.getStatus() == Token::rightParenthesis)
         {
             while(connector_stack.top() != "(")
             {
@@ -57,7 +57,7 @@ void ShuntingYard::run()
     }
 }
 
-queue<string> ShuntingYard::getReversePolish()
+queue<Token> ShuntingYard::getReversePolish()
 {
     return command_queue;
 }

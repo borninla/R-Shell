@@ -64,32 +64,32 @@ string _parseUntilConnector(string& parseThis)
 
 bool _isConnector(const string& str) { return str == "&&" || str == "||"; }
 
-queue<string> returnParsedData(string parseThisString)
-{
-    string newThis;
-    queue<string> tokens;
-
-    while (!parseThisString.empty()) {
-        if (parseThisString.compare(0, 2, "&&") == 0 || parseThisString.compare(0, 2, "||") == 0) //if connector is next
-        {
-            newThis = parseThisString.substr(0, 2);
-            parseThisString.erase(0, 3);   //erases connectors from string and space
-        }
-        else if (parseThisString.find("||") != string::npos ||
-                   parseThisString.find("&&") != string::npos)  //if connectors are in string
-        {
-            newThis = _parseUntilConnector(parseThisString);
-            parseThisString = trim(parseThisString);
-        }
-        else
-        {
-            newThis = _parseUntilConnector(parseThisString);
-            parseThisString.clear();
-        }
-        tokens.push(newThis);
-    }
-    return tokens;
-}
+//queue<Token> returnParsedData(string parseThisString)
+//{
+//    string newThis;
+//    queue<Token> tokens;
+//
+//    while (!parseThisString.empty()) {
+//        if (parseThisString.compare(0, 2, "&&") == 0 || parseThisString.compare(0, 2, "||") == 0) //if connector is next
+//        {
+//            newThis = parseThisString.substr(0, 2);
+//            parseThisString.erase(0, 3);   //erases connectors from string and space
+//        }
+//        else if (parseThisString.find("||") != string::npos ||
+//                   parseThisString.find("&&") != string::npos)  //if connectors are in string
+//        {
+//            newThis = _parseUntilConnector(parseThisString);
+//            parseThisString = trim(parseThisString);
+//        }
+//        else
+//        {
+//            newThis = _parseUntilConnector(parseThisString);
+//            parseThisString.clear();
+//        }
+//        tokens.push(newThis);
+//    }
+//    return tokens;
+//}
 
 string toDelimitedString(queue<string> q, string delim)
 {
@@ -210,33 +210,23 @@ queue<Token> stringsToTokens(queue<string> convMe)
     return q;
 }
 
-bool parenthesisChecker(string checkMe)
+bool parenthesisChecker(queue<Token> checkMe)
 {
     stack<char> s;
 
-    for (size_t i = 0; i < checkMe.size(); i++) {
-
-        if (checkMe[i] == '(')
+    while(!checkMe.empty())
+    {
+        if(checkMe.front().getStatus() == Token::leftParenthesis)
+        {
             s.push('(');
-
-        else if (checkMe[i] == ')') {
-
-            if (s.empty() || s.top() != '(')
+            checkMe.pop();
+        }
+        else if(checkMe.front().getStatus() == Token::rightParenthesis)
+        {
+            if(s.empty() || s.top() != '(')
                 return false;
-
             s.pop();
         }
-
     }
-
     return s.empty();
-}
-
-bool quotesChecker(string checkMe)
-{
-    int numOfQuotes = 0;
-    for(unsigned long leftPos = checkMe.find('\"', 0); leftPos != string::npos; leftPos = checkMe.find('\"', leftPos + 1))
-        numOfQuotes++;
-
-    return numOfQuotes % 2 == 0;    //return true if even num of quotes
 }
