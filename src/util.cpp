@@ -62,16 +62,11 @@ string _parseUntilConnector(string& parseThis)
     return parsedStr;
 }
 
-bool _isConnector(const string& str) {
-
-    return str == "&&" || str == "||";
-
-}
+bool _isConnector(const string& str) { return str == "&&" || str == "||"; }
 
 queue<string> returnParsedData(string parseThisString)
 {
     string newThis;
-
     queue<string> tokens;
 
     while (!parseThisString.empty()) {
@@ -79,19 +74,20 @@ queue<string> returnParsedData(string parseThisString)
         {
             newThis = parseThisString.substr(0, 2);
             parseThisString.erase(0, 3);   //erases connectors from string and space
-        } else if (parseThisString.find("||") != string::npos ||
+        }
+        else if (parseThisString.find("||") != string::npos ||
                    parseThisString.find("&&") != string::npos)  //if connectors are in string
         {
             newThis = _parseUntilConnector(parseThisString);
             parseThisString = trim(parseThisString);
-        } else {
+        }
+        else
+        {
             newThis = _parseUntilConnector(parseThisString);
             parseThisString.clear();
         }
-
         tokens.push(newThis);
     }
-
     return tokens;
 }
 
@@ -236,3 +232,11 @@ bool parenthesisChecker(string checkMe)
     return s.empty();
 }
 
+bool quotesChecker(string checkMe)
+{
+    int numOfQuotes = 0;
+    for(unsigned long leftPos = checkMe.find('\"', 0); leftPos != string::npos; leftPos = checkMe.find('\"', leftPos + 1))
+        numOfQuotes++;
+
+    return numOfQuotes % 2 == 0;    //return true if even num of quotes
+}

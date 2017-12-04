@@ -36,7 +36,7 @@ public:
         return outs;
     }
     friend bool operator ==(const Token& t, const string& str);
-    friend bool operator ==(const Token& t, const string& str);
+    friend bool operator ==(const string& str, const Token& t);
 
     friend bool operator !=(const Token& t, const string& str);
     friend bool operator !=(const string& str, const Token& t);

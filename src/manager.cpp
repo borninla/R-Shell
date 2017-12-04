@@ -3,7 +3,6 @@
 void Manager::run() {
 
     char line[1024];
-    //char *command[64];
 
     while (true) {
 
@@ -28,19 +27,20 @@ void Manager::run() {
             if (str == "#")
                 continue;
 
+            //delimits parenthesis to get ready for parenthesisChecker
             str = padDelim(str, '(');
             str = padDelim(str, ')');
 
             if(str.substr(0, 4) == "exit")
                 exit(0);
 
-            if(parenthesisChecker(str))
+            if(parenthesisChecker(str) && quotesChecker(str))
             {
                 ShuntingYard sy(returnParsedData(str));
                 queue<string> cmdAndConnectorQueue = sy.getReversePolish();
                 evalPostFix(cmdAndConnectorQueue);
             } else
-                cerr << "ERROR: Uneven number of parenthesis" << endl;
+                cerr << "ERROR: Uneven number of parenthesis/quotes" << endl;
 
             cout << endl;
         }
@@ -211,7 +211,7 @@ void Manager::evalPostFix(queue<string>& string_postfix_queue)
     }
 
     //@TODO: Replace with better code lol
-    if (token_eval_stack.size() == 1 && token_eval_stack.top().toString() != "")
+    if (token_eval_stack.size() == 1 && !token_eval_stack.top().toString().empty())
     {
         execute(token_eval_stack.top().toString());
     }
@@ -228,7 +228,7 @@ void Manager::evaluate(vector<Token> binExpression)
 {
     assert(binExpression.size() == 3);  //first command, connector, last command
 
-    if(binExpression[0].toString() != "")
+    if(!binExpression[0].toString().empty())
         execute(binExpression[0].toString());   //modifies wasSuccess
 
     binExpression[0].setStatus(wasSuccess);
