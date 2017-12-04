@@ -7,24 +7,37 @@ void Manager::run() {
     while(true)
     {
         cout << "$ ";
-        cin.getline(line, 1024 + 1);
+        cin.getline(line, 1024 /*+ 1*/);
         line[cin.gcount()] = '\0';  //null-terminated
         cout << endl;
 
-        Token tok;
+        Token thisLine;
         queue<Token> tokens;
         Delim d(line, ';', false);    //Constructor delimits line
 
         while(!d.done())
         {
             //Extract from d into tok to prepare for further tokenizing
-            d >> tok;
-            Delim dd(tok.toString(), ' ', true);
+            d >> thisLine;
+
+            cout << "thisLine: " << thisLine.toString() << endl
+                 << endl;
+
+            Delim dd(thisLine.toString(), ' ', true);
+//            cout << d.size() << endl << dd.size() << endl << endl;
+            cout << "d.size(): " << d.size() << endl
+                 << "dd.size(): " << dd.size() << endl
+                 << endl;
+
+            cout << "d: " << d << endl
+                 << "dd: " << dd << endl
+                 << endl;
 
             while(!dd.done())
             {
-                dd >> tok;
-                tokens.push(tok);
+                Token thisToken;
+                dd >> thisToken;
+                tokens.push(thisToken);
             }
 
             //@TODO: paren and comment check will be handled in delim constructor
