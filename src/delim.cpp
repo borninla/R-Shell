@@ -117,7 +117,9 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
 //            q.push(currentStr);
             q.push(Token(currentStr));
         }
-        walker++;
+
+        if (*walker != '\0')
+            walker++;
     }
 
 }
