@@ -22,6 +22,7 @@ public:
     enum Status { successfulCmd, failedCmd, notYetRunCmd,
         connector,
         error,
+        quote,
         leftParenthesis, rightParenthesis };
 
     void setStatus(bool wasSuccessful); //can only set a notYetRunCmd
@@ -44,7 +45,19 @@ public:
 private:
 
     int status;
-    const string str;
+
+    /**
+     * @brief str String representation of the token.
+     * Using const deletes the implicit copy ctor for Token for some reason,
+     * so I can't make it const,
+     * but DO NOT change str after it is constructed!
+     * Make a new token instead.
+     * Tokens should be almost-immutable after construction,
+     * with the only exception being commands which must be updated after they are run.
+     */
+    /*const*/ string str;
+
+    void _stripEndQuotes();
 };
 
 #endif // TOKEN_H

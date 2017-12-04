@@ -6,17 +6,23 @@ Token::Token(string str, int status) : status(status), str(trim(str)) {}
 
 Token::Token(string str) : str(trim(str)) {
 
-    if (str == "&&" || str == "||") {
+    if (this->str == "&&" || this->str == "||") {
 
         status = connector;
 
-    } else if (str == "(") {
+    } else if (this->str == "(") {
 
         status = leftParenthesis;
 
-    } else if (str == ")") {
+    } else if (this->str == ")") {
 
         status = rightParenthesis;
+
+    } else if (!(this->str.empty())
+               && (this->str[0] == '\"' && this->str[str.size() - 1] == '\"')) {
+
+        status = quote;
+        _stripEndQuotes();
 
     } else {
 
@@ -69,4 +75,15 @@ bool operator !=(const Token& t, const string& str) {
 bool operator !=(const string& str, const Token& t) {
 
     return str == t.toString();
+}
+
+void Token::_stripEndQuotes() {
+
+    if (this->status != quote)
+        return;
+
+    assert(this->str.size() >= 2);
+
+    str.erase(0, 1);
+    str.erase(str.size() - 1, 1);
 }
