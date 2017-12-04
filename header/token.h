@@ -14,9 +14,7 @@ class Token
 {
 public:
     Token(); //don't use this please, ill-defined Token
-
     Token(string str, int status);//uncomment to manually set status
-
     Token(string str); //infers status based on input
 
     enum Status { successfulCmd, failedCmd, notYetRunCmd,
@@ -31,11 +29,8 @@ public:
 
     string toString() const;
 
-    friend ostream& operator <<(ostream& outs, const Token& printMe) {
+    friend ostream& operator <<(ostream& outs, const Token& printMe);
 
-        outs << printMe.str << " | Enum " << printMe.status;
-        return outs;
-    }
     friend bool operator ==(const Token& t, const string& str);
     friend bool operator ==(const string& str, const Token& t);
 
@@ -43,7 +38,6 @@ public:
     friend bool operator !=(const string& str, const Token& t);
 
 private:
-
     int status;
 
     /**

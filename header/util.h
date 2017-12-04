@@ -9,17 +9,10 @@ class Token;    //Token constructor uses trim, so there is circular dependency
 
 using namespace std;
 
+//IMPORTANT: need to deallocate the char* after finishing the use of _copyStrToCharPtr
 char* _copyStrToCharPtr(const string& str);
 
 string trim(const string& trimMe);
-
-string _parseUntilConnector(string& parseThis);
-
-bool _isConnector(const string& str);
-
-//queue<Token> returnParsedData(string parseThisString);
-
-string toDelimitedString(queue<string> q, string delim);
 
 bool equals(const char * cStr, string str, bool capsSensitive);
 
@@ -28,7 +21,5 @@ char toLower(char c);
 string toLower(string str);
 
 string padDelim(string str, char delim);
-
-queue<Token> stringsToTokens(queue<string> convMe);
 
 bool parenthesisChecker(queue<Token> checkMe);

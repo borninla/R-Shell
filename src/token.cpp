@@ -51,11 +51,11 @@ string Token::toString() const {
     return str;
 }
 
-//ostream& operator <<(ostream& outs, const Token& printMe) {
-//
-//    outs << printMe.str << " | Enum " << printMe.status;
-//    return outs;
-//}
+ostream& operator <<(ostream& outs, const Token& printMe)
+{
+    outs << printMe.str << " | Enum " << printMe.status;
+    return outs;
+}
 
 bool operator ==(const Token& t, const string& str) {
 

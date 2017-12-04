@@ -6,6 +6,7 @@
 #include <stack>
 #include <queue>
 #include <cstring>
+#include <cassert>
 
 #include "util.h"
 

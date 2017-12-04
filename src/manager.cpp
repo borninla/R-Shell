@@ -19,18 +19,7 @@ void Manager::run() {
         {
             d >> thisLine;
 
-            cout << "thisLine: " << thisLine.toString() << endl
-                 << endl;
-
             Delim dd(thisLine.toString(), ' ', true);
-//            cout << d.size() << endl << dd.size() << endl << endl;
-            cout << "d.size(): " << d.size() << endl
-                 << "dd.size(): " << dd.size() << endl
-                 << endl;
-
-            cout << "d: " << d << endl
-                 << "dd: " << dd << endl
-                 << endl;
 
             while(!dd.done())
             {
@@ -49,13 +38,9 @@ void Manager::run() {
 //            if (str == "#")
 //                continue;
 
-//            if(parenthesisChecker(tokens))
-//            {
-                ShuntingYard sy(tokens);
-                queue<Token> evalQueue = sy.getReversePolish();
-                evalPostFix(evalQueue);
-//            } else
-//                cerr << "ERROR: Uneven number of parenthesis/quotes" << endl;
+            ShuntingYard sy(tokens);
+            queue<Token> evalQueue = sy.getReversePolish();
+            evalPostFix(evalQueue);
 
             cout << endl;
         }
@@ -91,7 +76,7 @@ void Manager::execute(char **command)
     }
 
     cerr << "Would be running execute() here!!" << endl;
-    /*if((process_id = fork()) < 0)   // if something went wrong with forking the process
+    if((process_id = fork()) < 0)   // if something went wrong with forking the process
     {
         //cerr << "ERROR: child process forking failed" << endl;
         //cerr << "In first block in execute()" << endl;
@@ -120,7 +105,7 @@ void Manager::execute(char **command)
 
         if(WEXITSTATUS(status)) //if it wasn't successful
             wasSuccess = false;
-    } //not sure what this does yet*/
+    }
 }
 
 void Manager::execute(string commandStr) {
@@ -130,8 +115,6 @@ void Manager::execute(string commandStr) {
     memset(cmd, 0, sizeof(cmd));
 
     parse(cStr, cmd);
-
-    //cerr << "Calling execute() with \"" << commandStr << "\"" << endl;
 
     execute(cmd);
 
@@ -145,7 +128,7 @@ void Manager::execute(string commandStr) {
 **/
 void Manager::parse(char *line, char **command)
 {
-    while (*line != '\0')  //While you're not at the end of the cstring,
+    while (*line != '\0')  //While you're not at the end of the cstring
     {
 
         //Replace whitespace with \0
@@ -178,7 +161,6 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
 
     while(!token_postfix_queue.empty())
     {
-//        if(token_postfix_queue.front() != "&&" && token_postfix_queue.front() != "||")  //if not connector
         if (token_postfix_queue.front().getStatus() != Token::connector)
         {
             token_eval_stack.push(token_postfix_queue.front());
@@ -188,20 +170,17 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
         {
             //Prepare the binary expression
 
+            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
 
-            //@TODO: Put back asserts if seg fault isnt fixed
-            //assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
-//            string op2 = token_eval_stack.top().toString();
             Token op2 = token_eval_stack.top();
             token_eval_stack.pop();
 
-//            string connector = token_postfix_queue.front();
             Token connector = token_postfix_queue.front();
             token_postfix_queue.pop();
-            //assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
+
+            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
 
             Token op1 = token_eval_stack.top();
-//            string op1 = token_eval_stack.top().toString();
             token_eval_stack.pop();
 
             // [command] [connector] [command]
@@ -227,6 +206,7 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
     //@TODO: Replace with better code lol
     if (token_eval_stack.size() == 1 && !token_eval_stack.top().toString().empty())
     {
+        assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
         execute(token_eval_stack.top().toString());
     }
 }

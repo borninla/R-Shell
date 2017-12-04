@@ -45,6 +45,8 @@ void ShuntingYard::run()
                 command_queue.push(connector_stack.top());
                 connector_stack.pop();
             }
+
+            assert(!connector_stack.empty());
             connector_stack.pop();  //pops left bracket
         }
     }
@@ -57,7 +59,4 @@ void ShuntingYard::run()
     }
 }
 
-queue<Token> ShuntingYard::getReversePolish()
-{
-    return command_queue;
-}
+queue<Token> ShuntingYard::getReversePolish() { return command_queue; }

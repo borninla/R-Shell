@@ -39,74 +39,6 @@ string trim(const string& trimMe) {
     return newStr;
 }
 
-string _parseUntilConnector(string& parseThis)
-{
-    size_t foundAnd, foundOr, foundSmallest;
-
-    if(parseThis.compare(0, 2, "&&") == 0 || parseThis.compare(0, 2, "&&") == 0 )   //if connector is first token
-        return parseThis;
-
-    foundAnd = parseThis.find("&&");
-    foundOr = parseThis.find("||");
-
-    if(foundAnd != UINT_MAX && foundOr != UINT_MAX && foundAnd < foundOr)
-        foundSmallest = foundAnd;
-    else if(foundAnd != UINT_MAX && foundOr != UINT_MAX && foundOr < foundAnd)
-        foundSmallest = foundOr;
-    else
-        return parseThis;
-
-    string parsedStr = parseThis.substr(0, foundSmallest - 1);
-    parseThis.erase(0, foundSmallest - 1);
-
-    return parsedStr;
-}
-
-bool _isConnector(const string& str) { return str == "&&" || str == "||"; }
-
-//queue<Token> returnParsedData(string parseThisString)
-//{
-//    string newThis;
-//    queue<Token> tokens;
-//
-//    while (!parseThisString.empty()) {
-//        if (parseThisString.compare(0, 2, "&&") == 0 || parseThisString.compare(0, 2, "||") == 0) //if connector is next
-//        {
-//            newThis = parseThisString.substr(0, 2);
-//            parseThisString.erase(0, 3);   //erases connectors from string and space
-//        }
-//        else if (parseThisString.find("||") != string::npos ||
-//                   parseThisString.find("&&") != string::npos)  //if connectors are in string
-//        {
-//            newThis = _parseUntilConnector(parseThisString);
-//            parseThisString = trim(parseThisString);
-//        }
-//        else
-//        {
-//            newThis = _parseUntilConnector(parseThisString);
-//            parseThisString.clear();
-//        }
-//        tokens.push(newThis);
-//    }
-//    return tokens;
-//}
-
-string toDelimitedString(queue<string> q, string delim)
-{
-    string concatenated = "";
-
-    while (!q.empty()) {
-
-        concatenated += q.front();
-        q.pop();
-
-        concatenated += delim;
-
-    }
-
-    return concatenated;
-}
-
 bool equals(const char * cStr, string str, bool capsSensitive)
 {
     string compareMeString;
@@ -193,21 +125,6 @@ string padDelim(string str, char delim)
     }
 
     return str;
-}
-
-queue<Token> stringsToTokens(queue<string> convMe)
-{
-
-    queue<Token> q;
-
-    while (!convMe.empty())
-    {
-        Token t(convMe.front());
-        q.push(t);
-        convMe.pop();
-    }
-
-    return q;
 }
 
 bool parenthesisChecker(queue<Token> checkMe)
