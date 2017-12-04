@@ -9,12 +9,12 @@ SOURCES += \
 	src/manager.cpp \
 	src/shunting_yard.cpp \
 	src/token.cpp \
-	src/util.cpp
+        src/util.cpp
 
 HEADERS += \
 	header/delim.h \
 	header/manager.h \
 	header/shunting_yard.h \
 	header/token.h \
-	header/util.h
+        header/util.h
 	
