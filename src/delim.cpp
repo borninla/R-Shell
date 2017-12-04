@@ -50,6 +50,24 @@ Delim& operator >>(Delim& delim, Token& t) {
     return delim;
 }
 
+ostream& operator <<(ostream& outs, const Delim& d) {
+
+//    queue<Token> qCopy = d.q;
+    queue<Token> qCopy(d.q);
+
+    outs << "{ ";
+
+    while(!qCopy.empty()) {
+
+        outs << "(" << qCopy.front() << ") ";
+        qCopy.pop();
+    }
+
+    outs << "}";
+
+    return outs;
+}
+
 void Delim::dumpToConsole() {
 
     while (!q.empty()) {
@@ -78,8 +96,10 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
         //Walk through a delimited section
 //        while(*walker != delim
 //              && *walker != '\0')
+
+        //Don't delimit if we're in a quote!
         while (*walker != '\0'
-               && ((*walker != delim) || (inQuoteFlag && weCareAboutQuotes))) { //Don't delimit if we're in a quote!
+               && ((*walker != delim) || (inQuoteFlag && weCareAboutQuotes))) {
 
             char currentChar = *walker;
             currentStr += currentChar;
@@ -91,7 +111,8 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
 
         }
 
-        if (!currentStr.empty()) {
+        if (!currentStr.empty())
+        {
 
 //            q.push(currentStr);
             q.push(Token(currentStr));
@@ -128,4 +149,8 @@ bool Delim::_properQuotes(string str) {
     }
 
     return totalQuotes % 2 == 0;
+}
+
+size_t Delim::size() const {
+    return q.size();
 }

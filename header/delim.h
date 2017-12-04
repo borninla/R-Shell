@@ -22,15 +22,16 @@ public:
      * @param delim
      */
     Delim(char* cstr, char delim, bool quotesSeparately);
-
+    Delim(string str, char delim, bool quotesSeparately);
 //    Delim(string str, string delim);
 
-    Delim(string str, char delim, bool quotesSeparately);
-
     bool done() const;
+    size_t size() const;
 
     friend Delim& operator >>(Delim& delim, Token& t);
 //    friend Delim& operator >>(Delim& delim, string& str);
+
+    friend ostream& operator <<(ostream& outs, const Delim& d);
 
     void dumpToConsole();
 
