@@ -52,7 +52,7 @@ void Manager::run() {
 **/
 bool Manager::shouldExecute(vector<Token> expr) {
 
-    if (expr.size() != 1 && expr.size() != 3)
+    if ( (expr.size() != 1 && expr.size() != 3) || (expr[0].getStatus() != Token::notYetRunCmd && expr[2].getStatus() != Token::notYetRunCmd) )
         return false;
 
     if(expr.size() == 1) //Unary expression
@@ -223,7 +223,7 @@ void Manager::evaluate(vector<Token> binExpression)
     }
 
     if(shouldExecute(binExpression))
-        execute(binExpression[2].toString()); //q.front() is the last command
+            execute(binExpression[2].toString());
 }
 
 queue<Token> Manager::combineCommands(queue<Token>& old_token_queue)
