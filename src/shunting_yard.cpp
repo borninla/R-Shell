@@ -25,7 +25,7 @@ void ShuntingYard::run()
             //(&& ||, || ||, || &&, and && &&). However, since && takes precedence over ||, there is
             //only one case where that happens (if an && connector coming in from delivery is being compared
             //with an || connector at the top of the stack).
-            while(!operator_stack.empty())
+            while(!operator_stack.empty() && operator_stack.top().getStatus() != Token::leftParenthesis)
             {
                 command_queue.push(operator_stack.top());
                 operator_stack.pop();
@@ -57,6 +57,7 @@ void ShuntingYard::run()
         command_queue.push(operator_stack.top());
         operator_stack.pop();
     }
+
 }
 
 queue<Token> ShuntingYard::getReversePolish() { return command_queue; }
