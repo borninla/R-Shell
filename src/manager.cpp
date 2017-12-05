@@ -12,7 +12,7 @@ void Manager::run() {
         cout << endl;
 
         Token thisLine;
-        queue<Token> tokens;
+        queue<Token> dd_token_queue, main_token_queue;
         Delim d(line, ';', false);    //Constructor delimits line
 
         while(!d.done())
@@ -25,7 +25,7 @@ void Manager::run() {
             {
                 Token thisToken;
                 dd >> thisToken;
-                tokens.push(thisToken);
+                dd_token_queue.push(thisToken);
             }
 
 //            @TODO: paren and comment check will be handled in delim constructor
@@ -38,9 +38,9 @@ void Manager::run() {
 //            if (str == "#")
 //                continue;
 
+            main_token_queue = combineCommands(dd_token_queue);
 
-
-            ShuntingYard sy(tokens);
+            ShuntingYard sy(main_token_queue);
             queue<Token> evalQueue = sy.getReversePolish();
             evalPostFix(evalQueue);
 
@@ -77,7 +77,7 @@ void Manager::execute(char **command)
         exit(0);
     }
 
-    cerr << "Would be running execute() here!!" << endl;
+    //cerr << "Would be running execute() here!!" << endl;
     if((process_id = fork()) < 0)   // if something went wrong with forking the process
     {
         //cerr << "ERROR: child process forking failed" << endl;
@@ -236,12 +236,27 @@ void Manager::evaluate(vector<Token> binExpression)
 
 queue<Token> Manager::combineCommands(queue<Token> &old_token_queue)
 {
-    queue<Token> new_old_token;
+    queue<Token> new_token_queue;
 
-    while(!new_old_token.empty())
+    while(!old_token_queue.empty())
     {
+        Token t("", Token::notYetRunCmd);
 
+        while(old_token_queue.front().getStatus() == Token::notYetRunCmd
+              || old_token_queue.front().getStatus() == Token::quote)
+        {
+            t += old_token_queue.front();
+            old_token_queue.pop();
+        }
+
+        new_token_queue.push(t);
+
+        if(!old_token_queue.empty())
+        {
+            new_token_queue.push(old_token_queue.front());
+            old_token_queue.pop();
+        }
     }
 
-    return new_old_token;
+    return new_token_queue;
 }

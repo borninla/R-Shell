@@ -92,8 +92,9 @@ Token &Token::operator+=(const Token &t) {
 
     assert(this->getStatus() == Token::notYetRunCmd);
 
-    this->str = this->str + " " + t.str;
+    this->str += " " + t.str;
+
+    this->str = trim(this->str);
 
     return *this;
-
 }
