@@ -28,17 +28,13 @@ void Manager::run() {
                 dd_token_queue.push(thisToken);
             }
 
-//            @TODO: paren and comment check will be handled in delim constructor
-//            delimits parenthesis to get ready for parenthesisChecker
-//            str = padDelim(str, '(');
-//            str = padDelim(str, ')');
-//
-//            str = str.substr(0, str.find('#') - 1);  //handle comments
-//            str = trim(str);                         //handle leading and trailing whitespace
-//            if (str == "#")
-//                continue;
-
             main_token_queue = combineCommands(dd_token_queue);
+
+            if(!parenthesisChecker(main_token_queue))
+            {
+                cerr << "ERROR: Uneven amount of parenthesis" << endl;
+                continue;
+            }
 
             ShuntingYard sy(main_token_queue);
             queue<Token> evalQueue = sy.getReversePolish();
@@ -230,7 +226,7 @@ void Manager::evaluate(vector<Token> binExpression)
         execute(binExpression[2].toString()); //q.front() is the last command
 }
 
-queue<Token> Manager::combineCommands(queue<Token> &old_token_queue)
+queue<Token> Manager::combineCommands(queue<Token>& old_token_queue)
 {
     queue<Token> new_token_queue;
 
@@ -238,16 +234,18 @@ queue<Token> Manager::combineCommands(queue<Token> &old_token_queue)
     {
         Token t("", Token::notYetRunCmd);
 
-        while(old_token_queue.front().getStatus() == Token::notYetRunCmd
-              || old_token_queue.front().getStatus() == Token::quote)
+        if(old_token_queue.front().getStatus() == Token::notYetRunCmd)
         {
-            t += old_token_queue.front();
-            old_token_queue.pop();
+            while (old_token_queue.front().getStatus() == Token::notYetRunCmd
+                   || old_token_queue.front().getStatus() == Token::quote)
+            {
+                t += old_token_queue.front();
+                old_token_queue.pop();
+            }
+
+            new_token_queue.push(t);
         }
-
-        new_token_queue.push(t);
-
-        if(!old_token_queue.empty())
+        else
         {
             new_token_queue.push(old_token_queue.front());
             old_token_queue.pop();

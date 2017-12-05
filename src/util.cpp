@@ -143,8 +143,12 @@ bool parenthesisChecker(queue<Token> checkMe)
             if(s.empty() || s.top() != '(')
                 return false;
             s.pop();
+            checkMe.pop();
         }
+        else
+            checkMe.pop();
     }
+
     return s.empty();
 }
 

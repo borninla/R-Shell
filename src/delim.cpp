@@ -13,6 +13,9 @@ Delim::Delim(char *cstr, char delim, bool quotesSeparately) {
 // @TODO: Have constructor tokenize parenthesis (replaces padDelim)
 Delim::Delim(string str, char delim, bool quotesSeparately) {
 
+    str = padDelim(str, '(');
+    str = padDelim(str, ')');
+
     char* c = _copyStrToCharPtr(str);
     _init(c, delim, quotesSeparately);
     delete [] c;
@@ -64,17 +67,13 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
         bool inQuoteFlag = false, commentFound = false;
 
         //Don't delimit if we're in a quote!
-        while (*walker != '\0'
-               && ((*walker != delim) || (inQuoteFlag && weCareAboutQuotes))) {
+        while (*walker != '\0' && ( (*walker != delim) || (inQuoteFlag && weCareAboutQuotes)) ) {
 
             char currentChar = *walker;
-
 
             if (currentChar == '\"')
                 inQuoteFlag = !inQuoteFlag; //toggle whether we're in or not
 
-//            if (currentChar == '#')
-//                continue;
             if (currentChar == '#' && !inQuoteFlag) {
                 commentFound = true;
                 break;

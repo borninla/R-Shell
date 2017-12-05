@@ -20,7 +20,7 @@ public:
     queue<Token> getReversePolish();
 private:
     queue<Token> delivery, command_queue;
-    stack<Token> connector_stack;
+    stack<Token> operator_stack;
 };
 
 
