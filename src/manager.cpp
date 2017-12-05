@@ -172,15 +172,11 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
         {
             //Prepare the binary expression
 
-            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
-
             Token op2 = token_eval_stack.top();
             token_eval_stack.pop();
 
             Token connector = token_postfix_queue.front();
             token_postfix_queue.pop();
-
-            assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
 
             Token op1 = token_eval_stack.top();
             token_eval_stack.pop();

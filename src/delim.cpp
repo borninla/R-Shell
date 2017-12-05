@@ -61,17 +61,26 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
     while(*walker != '\0') {
 
         string currentStr = "";
-        bool inQuoteFlag = false;
+        bool inQuoteFlag = false, commentFound = false;
 
         //Don't delimit if we're in a quote!
         while (*walker != '\0'
                && ((*walker != delim) || (inQuoteFlag && weCareAboutQuotes))) {
 
             char currentChar = *walker;
-            currentStr += currentChar;
+
 
             if (currentChar == '\"')
-                inQuoteFlag = !inQuoteFlag;
+                inQuoteFlag = !inQuoteFlag; //toggle whether we're in or not
+
+//            if (currentChar == '#')
+//                continue;
+            if (currentChar == '#' && !inQuoteFlag) {
+                commentFound = true;
+                break;
+            }
+
+            currentStr += currentChar;
 
             walker++;
 
@@ -79,6 +88,11 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
 
         if (!currentStr.empty())
             q.push(Token(currentStr));
+
+
+
+        if (commentFound)
+            return;
 
         if (*walker != '\0')
             walker++;
