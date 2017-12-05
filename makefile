@@ -1,14 +1,14 @@
 CC = g++
 CC_FLAGS = -std=c++11 -Wall -ansi
-EXEC = /bin/rshell
-SOURCES = $(wildcard *.cpp)
-OBJECTS = $(SOURCES:.cpp=.o)
+EXEC = bin/rshell
+SOURCES = $(wildcard ./src/*.cpp)
+OBJECTS = $(SOURCES: ./src/.cpp=.o)
 
-$(EXEC): $(OBJECTS)
-        $(CC) $(OBJECTS) -o $(EXEC)
+$(EXEC):$(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXEC)
 
 %.o: %.cpp
-        $(CC) -c $(CC_FLAGS) $< -o $@
+	$(CC) -c $(CC_FLAGS) $< -o $@
 
 clean:
-        rm -f $(EXEC) $(OBJECTS)
+	rm -f $(EXEC) $(OBJECTS)
