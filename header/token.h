@@ -37,6 +37,8 @@ public:
     friend bool operator !=(const Token& t, const string& str);
     friend bool operator !=(const string& str, const Token& t);
 
+    Token& operator +=(const Token& t);
+
 private:
     int status;
 

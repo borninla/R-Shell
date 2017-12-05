@@ -87,3 +87,13 @@ void Token::_stripEndQuotes() {
     str.erase(0, 1);
     str.erase(str.size() - 1, 1);
 }
+
+Token &Token::operator+=(const Token &t) {
+
+    assert(this->getStatus() == Token::notYetRunCmd);
+
+    this->str = this->str + " " + t.str;
+
+    return *this;
+
+}

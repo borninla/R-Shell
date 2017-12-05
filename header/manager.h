@@ -33,6 +33,7 @@ private:
     bool shouldExecute(vector<Token> expr);
     void evaluate(vector<Token> binExpression);
     void evalPostFix(queue<Token>& string_postfix_queue);
+    queue<Token> combineCommands(queue<Token>& old_token_queue);
 
     bool wasSuccess;
 };

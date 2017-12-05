@@ -7,8 +7,8 @@ using namespace std;
 
 int main()
 {
-    Manager m;
-    m.run();
+//    Manager m;
+//    m.run();
 
     return 0;
 }
