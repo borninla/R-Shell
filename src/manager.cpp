@@ -6,14 +6,16 @@ void Manager::run() {
 
     while(true)
     {
+        memset(line, 0, sizeof(line));  //clears line for future input
+
         cout << "$ ";
-        cin.getline(line, 1024 /*+ 1*/);
+        cin.getline(line, 1024);
         line[cin.gcount()] = '\0';  //null-terminated
         cout << endl;
 
         Token thisLine;
         queue<Token> dd_token_queue, main_token_queue;
-        Delim d(line, ';', false);    //Constructor delimits line
+        Delim d(line, ';', false);  //Constructor delimits line
 
         while(!d.done())
         {
@@ -43,23 +45,6 @@ void Manager::run() {
             cout << endl;
         }
     }
-}
-
-/**
- * @brief Determines if connectors permit the execution of a command
- * @param vector of Tokens of either form "<cmd> ** <cmd>" or "** <cmd>" (where ** denotes a connector, && or ||)
- * NOTE: wasSuccess must be properly updated from the previous command!!!!!!!!!!!!!
-**/
-bool Manager::shouldExecute(vector<Token> expr) {
-
-    if ( (expr.size() != 1 && expr.size() != 3) || (expr[0].getStatus() != Token::notYetRunCmd && expr[2].getStatus() != Token::notYetRunCmd) )
-        return false;
-
-    if(expr.size() == 1) //Unary expression
-        return expr[0].getStatus() == Token::notYetRunCmd;
-    else //binary expression
-        return ( (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&")
-                 || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
 }
 
 void Manager::execute(char **command)
@@ -197,11 +182,43 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
         }
     }
 
-    //@TODO: Replace with better code lol
     if (token_eval_stack.size() == 1 && !token_eval_stack.top().toString().empty())
     {
-        assert(token_eval_stack.top().getStatus() == Token::notYetRunCmd);
-        execute(token_eval_stack.top().toString());
+        ifstream path(token_eval_stack.top().toString().c_str());
+
+        switch(token_eval_stack.top().getStatus())
+        {
+            case Token::notYetRunCmd:
+                execute(token_eval_stack.top().toString());
+                break;
+            case Token::testE:
+
+                if(path.good())
+                    cout << "(True)" << endl;
+                else
+                    cout << "(False)" << endl;
+
+                break;
+            case Token::testD:
+
+                if(isThisADirectory(token_eval_stack.top().toString()))
+                    cout << "(True)" << endl;
+                else
+                    cout << "(False)" << endl;
+
+                break;
+            case Token::testF:
+
+                if(isThisAFile(token_eval_stack.top().toString()))
+                    cout << "(True)" << endl;
+                else
+                    cout << "(False)" << endl;
+
+                break;
+            default:
+                cerr << "ERROR: Incorrect token type to evaluate." << endl;
+                exit(7);
+        }
     }
 }
 
@@ -216,14 +233,74 @@ void Manager::evaluate(vector<Token> binExpression)
 {
     assert(binExpression.size() == 3);  //first command, connector, last command
 
-    if(binExpression[0].getStatus() == Token::notYetRunCmd)
+    ifstream path(binExpression[0].toString().c_str());
+
+    switch(binExpression[0].getStatus())
     {
-        execute(binExpression[0].toString());   //modifies wasSuccess
-        binExpression[0].setStatus(wasSuccess);
+        case Token::notYetRunCmd:
+
+            execute(binExpression[0].toString());
+
+            break;
+        case Token::testE:
+
+            wasSuccess = path.good();
+
+            if(wasSuccess)
+                cout << "(True)" << endl;
+            else
+                cout << "(False)" << endl;
+
+            break;
+        case Token::testD:
+
+            wasSuccess = isThisADirectory(binExpression[0].toString());
+
+            if(wasSuccess)
+                cout << "(True)" << endl;
+            else
+                cout << "(False)" << endl;
+
+            break;
+        case Token::testF:
+
+            wasSuccess = isThisAFile(binExpression[0].toString());
+
+            if(wasSuccess)
+                cout << "(True)" << endl;
+            else
+                cout << "(False)" << endl;
+
+            break;
+        default:
+            cerr << "ERROR: Incorrect token type to evaluate." << endl;
+            exit(7);
+
     }
 
+    binExpression[0].setStatus(wasSuccess);
+
     if(shouldExecute(binExpression))
-            execute(binExpression[2].toString());
+        execute(binExpression[2].toString());
+}
+
+/**
+ * @brief Determines if connectors permit the execution of a command
+ * @param vector of Tokens of either form "<cmd> ** <cmd>" or "** <cmd>" (where ** denotes a connector, && or ||)
+ * NOTE: wasSuccess must be properly updated from the previous command!!!!!!!!!!!!!
+**/
+bool Manager::shouldExecute(vector<Token> expr)
+{
+    //@TODO Get this to work with the test command
+    if ( (expr.size() != 1 && expr.size() != 3) ||
+         (expr[0].getStatus() != Token::notYetRunCmd && expr[2].getStatus() != Token::notYetRunCmd) )
+        return false;
+
+    if(expr.size() == 1) //Unary expression
+        return expr[0].getStatus() == Token::notYetRunCmd;
+    else //binary expression
+        return ( (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&")
+                 || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
 }
 
 queue<Token> Manager::combineCommands(queue<Token>& old_token_queue)
@@ -253,4 +330,40 @@ queue<Token> Manager::combineCommands(queue<Token>& old_token_queue)
     }
 
     return new_token_queue;
+}
+
+bool Manager::isThisADirectory(string pathname)
+{
+    struct stat sb;
+
+    stat(pathname.c_str(), &sb);
+
+    if ( access(pathname.c_str(),0) == 0 )
+    {
+        if (sb.st_mode & S_IFDIR)
+            wasSuccess = true;  //directory exists
+        else {
+            wasSuccess = false; //directory is not found
+        }
+    }
+
+    wasSuccess = false; //path is not found
+}
+
+bool Manager::isThisAFile(string pathname)
+{
+    struct stat sb;
+
+    stat(pathname.c_str(), &sb);
+
+    if ( access(pathname.c_str(),0) == 0 )
+    {
+        if (sb.st_mode & S_IFREG)
+            wasSuccess = true;  //file exists
+        else {
+            wasSuccess = false; //file is not found
+        }
+    }
+
+    wasSuccess = false; //path is not found
 }

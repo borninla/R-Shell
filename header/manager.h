@@ -12,6 +12,8 @@
 #include <climits>
 #include <cassert>
 #include <vector>
+#include <fstream>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h> //uncomment for hammer
 
@@ -32,8 +34,10 @@ private:
     void parse(char *line, char **command);
     bool shouldExecute(vector<Token> expr);
     void evaluate(vector<Token> binExpression);
-    void evalPostFix(queue<Token>& string_postfix_queue);
+    void evalPostFix(queue<Token>& token_postfix_queue);
     queue<Token> combineCommands(queue<Token>& old_token_queue);
+    bool isThisADirectory(string pathname);
+    bool isThisAFile(string pathname);
 
     bool wasSuccess;
 };
