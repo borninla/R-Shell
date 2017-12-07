@@ -98,7 +98,7 @@ Token &Token::operator+=(const Token &t) {
     return *this;
 }
 
-bool Token::_testChecker() const
+bool Token::_isTest() const
 {
-
+    return (this->status == Token::testD) || (this->status == Token::testE) || (this->status == Token::testF);
 }

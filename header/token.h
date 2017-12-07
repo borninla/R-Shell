@@ -56,7 +56,7 @@ private:
     /*const*/ string str;
 
     void _stripEndQuotes();
-    bool _testChecker() const;
+    bool _isTest() const;
 };
 
 
