@@ -24,4 +24,6 @@ string padDelim(string str, char delim);
 
 bool parenthesisChecker(queue<Token> checkMe);
 
+bool testChecker(queue<Token> checkMe);
+
 bool myXOR(bool val1, bool val2);

@@ -18,8 +18,7 @@ Token::Token(string str) : str(trim(str)) {
 
         status = rightParenthesis;
 
-    } else if (!(this->str.empty())
-               && (this->str[0] == '\"' && this->str[str.size() - 1] == '\"')) {
+    } else if (!(this->str.empty()) && (this->str[0] == '\"' && this->str[str.size() - 1] == '\"')) {
 
         status = quote;
         _stripEndQuotes();
@@ -97,4 +96,9 @@ Token &Token::operator+=(const Token &t) {
     this->str = trim(this->str);
 
     return *this;
+}
+
+bool Token::_testChecker() const
+{
+
 }

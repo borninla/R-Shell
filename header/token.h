@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+
 #include <iostream>
 #include <string>
 #include <cassert>
@@ -21,7 +22,8 @@ public:
         connector,
         error,
         quote,
-        leftParenthesis, rightParenthesis };
+        leftParenthesis, rightParenthesis,
+        testE, testF, testD };
 
     void setStatus(bool wasSuccessful); //can only set a notYetRunCmd
 
@@ -54,6 +56,8 @@ private:
     /*const*/ string str;
 
     void _stripEndQuotes();
+    bool _testChecker() const;
 };
+
 
 #endif // TOKEN_H
