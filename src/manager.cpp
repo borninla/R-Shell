@@ -291,7 +291,6 @@ void Manager::evaluate(vector<Token> binExpression)
 **/
 bool Manager::shouldExecute(vector<Token> expr)
 {
-    assert(expr.size() == 3);
 
     if ( (expr.size() != 1 && expr.size() != 3) ||
          (expr[0].getStatus() != Token::notYetRunCmd && expr[2].getStatus() != Token::notYetRunCmd) )
@@ -338,14 +337,18 @@ bool Manager::isThisADirectory(string pathname)
 
     if ( access(pathname.c_str(),0) == 0 )
     {
-        if (sb.st_mode & S_IFDIR)
+        if (sb.st_mode & S_IFDIR) {
             wasSuccess = true;  //directory exists
+            return true;
+        }
         else {
             wasSuccess = false; //directory is not found
+            return false;
         }
     }
 
     wasSuccess = false; //path is not found
+    return false;
 }
 
 bool Manager::isThisAFile(string pathname)
@@ -356,12 +359,16 @@ bool Manager::isThisAFile(string pathname)
 
     if ( access(pathname.c_str(),0) == 0 )
     {
-        if (sb.st_mode & S_IFREG)
+        if (sb.st_mode & S_IFREG) {
             wasSuccess = true;  //file exists
+            return true;
+        }
         else {
             wasSuccess = false; //file is not found
+            return false;
         }
     }
 
     wasSuccess = false; //path is not found
+    return false;
 }

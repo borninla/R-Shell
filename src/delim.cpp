@@ -10,7 +10,6 @@ Delim::Delim(char *cstr, char delim, bool quotesSeparately) {
     _init(cstr, delim, quotesSeparately);
 }
 
-// @TODO: Have constructor tokenize parenthesis (replaces padDelim)
 Delim::Delim(string str, char delim, bool quotesSeparately) {
 
     str = padDelim(str, '(');

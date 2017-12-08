@@ -5,8 +5,6 @@ using namespace std;
 
 int main()
 {
-    cout << "Testing commit from IDE!" << endl;
-
     Manager m;
     m.run();
 

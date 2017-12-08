@@ -100,8 +100,8 @@ Token &Token::operator+=(const Token &t) {
 bool Token::isTest() const
 {
     return (this->status == Token::testD)
-            || (this->status == Token::testE)
-            || (this->status == Token::testF);
+           || (this->status == Token::testE)
+           || (this->status == Token::testF);
 }
 
 size_t Token::_whatKindOfTest(string str) {
@@ -159,57 +159,36 @@ void Token::_pruneTest() {
     //Get rid of flags, if there is any
     size_t foundIndex;
 
-    /*if (status == Token::testD) {
-
-        foundIndex = str.find("-d");
-        assert(foundIndex != string::npos);
-
-
-    } else if (status == Token::testF) {
-
-        foundIndex = str.find("-f");
-        assert(foundIndex != string::npos);
-
-    } else {
-
-        assert(status == Token::testE);
-
-        foundIndex = str.find("-e");
-
-        if (foundIndex == string::npos) //if is default "-e"
-            return;
-    }*/
-
     switch(status) {
 
-    case Token::testD: {
+        case Token::testD: {
 
-        foundIndex = str.find("-d");
-        assert(foundIndex != string::npos);
+            foundIndex = str.find("-d");
+            assert(foundIndex != string::npos);
 
-        break;
-    }
-
-    case Token::testF: {
-
-        foundIndex = str.find("-f");
-        assert(foundIndex != string::npos);
-
-        break;
-    }
-
-    default: {
-
-        assert(status == Token::testE);
-
-        foundIndex = str.find("-e");
-
-        if (foundIndex == string::npos) {
-
-            str = trim(str);
-            return;
+            break;
         }
-    }
+
+        case Token::testF: {
+
+            foundIndex = str.find("-f");
+            assert(foundIndex != string::npos);
+
+            break;
+        }
+
+        default: {
+
+            assert(status == Token::testE);
+
+            foundIndex = str.find("-e");
+
+            if (foundIndex == string::npos) {
+
+                str = trim(str);
+                return;
+            }
+        }
     }
 
     str = trim(str.substr(foundIndex + 3, string::npos));

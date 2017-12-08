@@ -23,7 +23,7 @@ public:
         error,
         quote,
         leftParenthesis, rightParenthesis,
-        testE, testF, testD };
+        testD, testE, testF };
 
     void setStatus(bool wasSuccessful); //can only set a notYetRunCmd
 
