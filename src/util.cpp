@@ -156,3 +156,15 @@ bool myXOR(bool val1, bool val2) {
 
     return val1 != val2;
 }
+
+void eraseBothSides(string& trimMe, size_t thisManyChars) {
+
+    //Make sure there are enough characters in trimMe to erase
+    assert(trimMe.size() >= (thisManyChars * 2));
+
+    if (thisManyChars == 0)
+        return;
+
+    trimMe.erase(0, thisManyChars);
+    trimMe.erase(trimMe.size() - thisManyChars, string::npos);
+}

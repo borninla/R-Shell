@@ -27,3 +27,5 @@ bool parenthesisChecker(queue<Token> checkMe);
 bool testChecker(queue<Token> checkMe);
 
 bool myXOR(bool val1, bool val2);
+
+void eraseBothSides(string& trimMe, size_t thisManyChars);
