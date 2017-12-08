@@ -291,16 +291,14 @@ void Manager::evaluate(vector<Token> binExpression)
 **/
 bool Manager::shouldExecute(vector<Token> expr)
 {
-    //@TODO Get this to work with the test command
+    assert(expr.size() == 3);
+
     if ( (expr.size() != 1 && expr.size() != 3) ||
          (expr[0].getStatus() != Token::notYetRunCmd && expr[2].getStatus() != Token::notYetRunCmd) )
         return false;
 
-    if(expr.size() == 1) //Unary expression
-        return expr[0].getStatus() == Token::notYetRunCmd;
-    else //binary expression
-        return ( (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&")
-                 || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
+    return ( (expr[0].getStatus() == Token::successfulCmd && expr[1].toString() == "&&")
+             || (expr[0].getStatus() == Token::failedCmd && expr[1].toString() == "||") );
 }
 
 queue<Token> Manager::combineCommands(queue<Token>& old_token_queue)
