@@ -24,6 +24,52 @@ bool Delim::done() const { return q.empty(); }
 
 size_t Delim::size() const { return q.size(); }
 
+void Delim::compressTokens() {
+
+    queue<Token> replacementQueue;
+
+
+
+    while(!q.empty()) {
+
+        //Prepare to append to current Token
+        vector<Token> aggregateVector;
+        Token initialToken = q.front();
+        aggregateVector.push_back(initialToken);
+        q.pop();
+
+
+
+        while(!q.empty()
+
+              //Iterate through q for as long as the type matches initialToken
+              && (q.front().getStatus() == initialToken.getStatus()
+
+                  //Or, iterate through q for as long as the quote extends
+                  || initialToken.toString().at(0) == '\"')) {
+
+            Token appendMe = q.front();
+            aggregateVector.push_back(appendMe);
+            q.pop();
+
+            //Exit the loop if we were in a quote, and there's a \" at the end of this token to end the quote
+            if (initialToken.toString().at(0) == '\"'
+                    && appendMe.toString().at(appendMe.toString().size() - 1) == '\"')
+                break;
+        }
+
+        //Make the combine token based on what you collected, and push it into replacementQueue
+        Token aggregateToken(aggregateVector);
+        replacementQueue.push(aggregateToken);
+    }
+
+
+
+    //Replace queue
+    q.swap(replacementQueue);
+    assert(replacementQueue.empty());
+}
+
 Delim& operator >>(Delim& delim, Token& t) {
 
     assert(!delim.q.empty());

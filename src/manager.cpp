@@ -22,6 +22,7 @@ void Manager::run() {
             d >> thisLine;
 
             Delim dd(thisLine.toString(), ' ', true);
+            dd.compressTokens();
 
             while(!dd.done())
             {
@@ -58,8 +59,8 @@ void Manager::execute(char **command)
         exit(0);
     }
 
-    //cerr << "Would be running execute() here!!" << endl;
-    if((process_id = fork()) < 0)   // if something went wrong with forking the process
+    cerr << "Would be running execute() here!!" << endl;
+    /*if((process_id = fork()) < 0)   // if something went wrong with forking the process
     {
         //cerr << "ERROR: child process forking failed" << endl;
         //cerr << "In first block in execute()" << endl;
@@ -88,7 +89,7 @@ void Manager::execute(char **command)
 
         if(WEXITSTATUS(status)) //if it wasn't successful
             wasSuccess = false;
-    }
+    }*/
 }
 
 void Manager::execute(string commandStr) {
@@ -216,7 +217,8 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
 
                 break;
             default:
-                cerr << "ERROR: Incorrect token type to evaluate." << endl;
+                cerr << "ERROR: Incorrect token type to evaluate." << endl
+                     << "Token is enum " << token_eval_stack.top().getStatus() << endl;
                 exit(7);
         }
     }

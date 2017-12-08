@@ -39,6 +39,31 @@ Token::Token(string str) : str(trim(str)) {
     }
 }
 
+Token::Token(const vector<Token>& combineUs) {
+
+    if (combineUs.empty()) {
+
+        str = "";
+        status = error;
+    } else {
+
+        //Set status explicitly
+        status = combineUs[0].getStatus();
+
+        //Combine strings, delimiting with ' '
+        string strAggregate = "";
+
+        for (size_t i = 0; i < combineUs.size(); i++) {
+
+            Token& currentToken = combineUs[i];
+            strAggregate += currentToken.toString();
+            strAggregate += ' ';
+        }
+
+        str = strAggregate;
+    }
+}
+
 void Token::setStatus(bool wasSuccessful) {
 
     assert(status == notYetRunCmd);

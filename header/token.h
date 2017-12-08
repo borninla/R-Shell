@@ -17,6 +17,7 @@ public:
     Token(); //don't use this please, ill-defined Token
     Token(string str, int status);//uncomment to manually set status
     Token(string str); //infers status based on input
+    Token(const vector<Token>& combineUs); //status is taken from token at index 0
 
     enum Status { successfulCmd, failedCmd, notYetRunCmd,
         connector,
