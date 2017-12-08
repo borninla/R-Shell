@@ -15,8 +15,6 @@ Token::Token(string str) : str(trim(str)) {
         status = testType;
         _pruneTest();
 
-
-
     } else if (this->str == "&&" || this->str == "||") {
 
         status = connector;
@@ -33,6 +31,7 @@ Token::Token(string str) : str(trim(str)) {
 
         status = quote;
         eraseBothSides(this->str, 1);
+        this->str = trim(this->str);
 
     } else {
 
