@@ -1,6 +1,6 @@
 CC = g++
 CC_FLAGS = -std=c++11 -Wall -ansi
-EXEC = rshell-the-werbenjagermanjensens/bin/rshell
+EXEC = bin/rshell
 SOURCES = $(wildcard ./src/*.cpp)
 OBJECTS = $(SOURCES: ./src/.cpp=.o)
 
