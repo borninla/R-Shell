@@ -59,6 +59,8 @@ private:
     bool _properQuotes(string str);
     bool _properQuotes(char* c);
 
+    bool _isBlacklisted(Token t);
+
     queue<Token> q;
 };
 

@@ -39,20 +39,30 @@ void Delim::compressTokens() {
 
 
 
-        while(!q.empty()
+        //Only consider appending if it's not blacklisted
+        if (!_isBlacklisted(initialToken)) {
 
-              //Iterate through q for as long as the type matches initialToken
-              //Or, iterate through q for as long as the quote extends
-              && (q.front().getStatus() == initialToken.getStatus() || initialToken.toString().at(0) == '\"')) {
 
-            Token appendMe = q.front();
-            aggregateVector.push_back(appendMe);
-            q.pop();
+            while (!q.empty()
 
-            //Exit the loop if we were in a quote, and there's a \" at the end of this token to end the quote
-            if (initialToken.toString().at(0) == '\"'
-                && appendMe.toString().at(appendMe.toString().size() - 1) == '\"')
-                break;
+                   //              //Iterate through q for as long as the type matches initialToken
+                   //              //Or, iterate through q for as long as the quote extends
+                   //              && (q.front().getStatus() == initialToken.getStatus() || initialToken.toString().at(0) == '\"')) {
+
+                   //Iterate thorugh q for as long as we don't reach something that we should delimit
+                   //Or, iterate through q for as long as the quote extends
+                   && (!_isBlacklisted(q.front()) || initialToken.toString().at(0) == '\"')) {
+
+                Token appendMe = q.front();
+                aggregateVector.push_back(appendMe);
+                q.pop();
+
+                //Exit the loop if we were in a quote, and there's a \" at the end of this token to end the quote
+                if (initialToken.toString().at(0) == '\"'
+                    && appendMe.toString().at(appendMe.toString().size() - 1) == '\"')
+                    break;
+            }
+
         }
 
         //Make the combine token based on what you collected, and push it into replacementQueue
@@ -208,4 +218,14 @@ void Delim::checkFlagsAndReinitStatus()
     //Replace queue
     q.swap(replacementQueue);
     assert(replacementQueue.empty());
+}
+
+bool Delim::_isBlacklisted(Token t) {
+
+    size_t thisStatus = t.getStatus();
+
+    return thisStatus == Token::leftParenthesis
+            || thisStatus == Token::rightParenthesis
+            || thisStatus == Token::connector
+            || thisStatus == Token::error;
 }

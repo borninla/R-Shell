@@ -168,3 +168,8 @@ void eraseBothSides(string& trimMe, size_t thisManyChars) {
     trimMe.erase(0, thisManyChars);
     trimMe.erase(trimMe.size() - thisManyChars, string::npos);
 }
+
+void clearQueue(queue<Token>& queue_to_clear) {
+    while(!queue_to_clear.empty())
+        queue_to_clear.pop();
+}

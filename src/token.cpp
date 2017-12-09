@@ -153,10 +153,6 @@ size_t Token::_whatKindOfTest(string str) {
         return string::npos;
     }
 
-    //Really janky, but provides a temporary fix for tests that come in with brackets
-    if(str[0] == '[')
-        return Token::testE;
-
     if ( !(str[0] == '[' && str[str.size() - 1] == ']') && toLower(str.substr(0, 4)) != "test")
         return string::npos;
 

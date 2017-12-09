@@ -45,6 +45,8 @@ void Manager::run() {
             queue<Token> evalQueue = sy.getReversePolish();
             evalPostFix(evalQueue);
 
+            clearQueue(dd_token_queue);
+
             cout << endl;
         }
     }
