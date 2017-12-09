@@ -173,3 +173,16 @@ void clearQueue(queue<Token>& queue_to_clear) {
     while(!queue_to_clear.empty())
         queue_to_clear.pop();
 }
+
+void populateQueue(queue<Token>& populateMe, queue<Token> source) {
+
+    clearQueue(populateMe);
+
+    while(!source.empty()) {
+
+        Token& t = source.front();
+        populateMe.push(t);
+        source.pop();
+
+    }
+}

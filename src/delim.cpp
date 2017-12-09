@@ -77,8 +77,10 @@ void Delim::compressTokens() {
 
 
     //Replace queue
-    q.swap(replacementQueue);
-    assert(replacementQueue.empty());
+    populateQueue(q, replacementQueue);
+    clearQueue(replacementQueue);
+//    q.swap(replacementQueue);
+//    assert(replacementQueue.empty());
 }
 
 Delim& operator >>(Delim& delim, Token& t) {
@@ -216,8 +218,10 @@ void Delim::checkFlagsAndReinitStatus()
 
 
     //Replace queue
-    q.swap(replacementQueue);
-    assert(replacementQueue.empty());
+//    q.swap(replacementQueue);
+//    assert(replacementQueue.empty());
+    populateQueue(q, replacementQueue);
+    clearQueue(replacementQueue);
 }
 
 bool Delim::_isBlacklisted(Token t) {

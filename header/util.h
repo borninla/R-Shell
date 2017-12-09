@@ -31,3 +31,5 @@ bool myXOR(bool val1, bool val2);
 void eraseBothSides(string& trimMe, size_t thisManyChars);
 
 void clearQueue(queue<Token>& queue_to_clear);
+
+void populateQueue(queue<Token>& populateMe, queue<Token> source);
