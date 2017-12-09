@@ -15,31 +15,33 @@ void Manager::run() {
 
         Token thisLine;
         queue<Token> dd_token_queue, main_token_queue;
-        Delim d(line, ';', false);  //Constructor delimits line
+        Delim d(line, ';', false, false);  //Constructor delimits line
 
         while(!d.done())
         {
             d >> thisLine;
 
-            Delim dd(thisLine.toString(), ' ', true);
+            Delim dd(thisLine.toString(), ' ', true, true);
             dd.compressTokens();
+            dd.checkFlagsAndReinitStatus();
 
             while(!dd.done())
             {
                 Token thisToken;
                 dd >> thisToken;
+
                 dd_token_queue.push(thisToken);
             }
 
-            main_token_queue = combineCommands(dd_token_queue);
+            //main_token_queue = combineCommands(dd_token_queue);
 
-            if(!parenthesisChecker(main_token_queue))
+            if(!parenthesisChecker(dd_token_queue))
             {
                 cerr << "ERROR: Uneven amount of parenthesis" << endl;
                 continue;
             }
 
-            ShuntingYard sy(main_token_queue);
+            ShuntingYard sy(dd_token_queue);
             queue<Token> evalQueue = sy.getReversePolish();
             evalPostFix(evalQueue);
 
@@ -217,8 +219,8 @@ void Manager::evalPostFix(queue<Token>& token_postfix_queue)
 
                 break;
             default:
-                cerr << "ERROR: Incorrect token type to evaluate." << endl
-                     << "Token is enum " << token_eval_stack.top().getStatus() << endl;
+                cerr << "ERROR: Incorrect token type to evaluate. Token is enum "
+                     << token_eval_stack.top().getStatus() << endl;
                 exit(7);
         }
     }
@@ -237,7 +239,7 @@ void Manager::evaluate(vector<Token> binExpression)
 
     ifstream path(binExpression[0].toString().c_str());
 
-    switch(binExpression[0].getStatus())
+    switch (binExpression[0].getStatus())
     {
         case Token::notYetRunCmd:
 
@@ -248,7 +250,7 @@ void Manager::evaluate(vector<Token> binExpression)
 
             wasSuccess = path.good();
 
-            if(wasSuccess)
+            if (wasSuccess)
                 cout << "(True)" << endl;
             else
                 cout << "(False)" << endl;
@@ -258,7 +260,7 @@ void Manager::evaluate(vector<Token> binExpression)
 
             wasSuccess = isThisADirectory(binExpression[0].toString());
 
-            if(wasSuccess)
+            if (wasSuccess)
                 cout << "(True)" << endl;
             else
                 cout << "(False)" << endl;
@@ -268,17 +270,20 @@ void Manager::evaluate(vector<Token> binExpression)
 
             wasSuccess = isThisAFile(binExpression[0].toString());
 
-            if(wasSuccess)
+            if (wasSuccess)
                 cout << "(True)" << endl;
             else
                 cout << "(False)" << endl;
 
             break;
         default:
-            cerr << "ERROR: Incorrect token type to evaluate." << endl;
+            cerr << "ERROR: Incorrect token type to evaluate. Token is enum "
+                 << binExpression[0].getStatus() << endl;
             exit(7);
 
     }
+
+    path.close();
 
     binExpression[0].setStatus(wasSuccess);
 

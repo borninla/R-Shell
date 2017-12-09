@@ -2,21 +2,21 @@
 
 Delim::Delim() {
 
-    _init(NULL, ' ', true);
+    _init(NULL, ' ', true, false);
 }
 
-Delim::Delim(char *cstr, char delim, bool quotesSeparately) {
+Delim::Delim(char *cstr, char delim, bool quotesSeparately, bool worryAboutTests) {
 
-    _init(cstr, delim, quotesSeparately);
+    _init(cstr, delim, quotesSeparately, worryAboutTests);
 }
 
-Delim::Delim(string str, char delim, bool quotesSeparately) {
+Delim::Delim(string str, char delim, bool quotesSeparately, bool worryAboutTests) {
 
     str = padDelim(str, '(');
     str = padDelim(str, ')');
 
     char* c = _copyStrToCharPtr(str);
-    _init(c, delim, quotesSeparately);
+    _init(c, delim, quotesSeparately, worryAboutTests);
     delete [] c;
 }
 
@@ -27,7 +27,6 @@ size_t Delim::size() const { return q.size(); }
 void Delim::compressTokens() {
 
     queue<Token> replacementQueue;
-
 
 
     while(!q.empty()) {
@@ -43,10 +42,8 @@ void Delim::compressTokens() {
         while(!q.empty()
 
               //Iterate through q for as long as the type matches initialToken
-              && (q.front().getStatus() == initialToken.getStatus()
-
-                  //Or, iterate through q for as long as the quote extends
-                  || initialToken.toString().at(0) == '\"')) {
+              //Or, iterate through q for as long as the quote extends
+              && (q.front().getStatus() == initialToken.getStatus() || initialToken.toString().at(0) == '\"')) {
 
             Token appendMe = q.front();
             aggregateVector.push_back(appendMe);
@@ -54,12 +51,16 @@ void Delim::compressTokens() {
 
             //Exit the loop if we were in a quote, and there's a \" at the end of this token to end the quote
             if (initialToken.toString().at(0) == '\"'
-                    && appendMe.toString().at(appendMe.toString().size() - 1) == '\"')
+                && appendMe.toString().at(appendMe.toString().size() - 1) == '\"')
                 break;
         }
 
         //Make the combine token based on what you collected, and push it into replacementQueue
         Token aggregateToken(aggregateVector);
+
+        if(aggregateToken.isTest())
+            aggregateToken._pruneTest();
+
         replacementQueue.push(aggregateToken);
     }
 
@@ -97,7 +98,7 @@ ostream& operator <<(ostream& outs, const Delim& d) {
     return outs;
 }
 
-void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
+void Delim::_init(char *cstr, char delim, bool quotesSeparately, bool worryAboutTests) {
 
     if (cstr == NULL)
         return;
@@ -131,7 +132,12 @@ void Delim::_init(char *cstr, char delim, bool quotesSeparately) {
         }
 
         if (!currentStr.empty())
-            q.push(Token(currentStr));
+        {
+            if ( (!q.empty()) && (q.back().isTest()) && (worryAboutTests) && (currentStr != "&&" && currentStr != "||") )
+                q.push(Token(currentStr, q.back().getStatus()));
+            else
+                q.push(Token(currentStr, worryAboutTests));
+        }
 
 
 
@@ -161,4 +167,45 @@ bool Delim::_properQuotes(string str) {
     }
 
     return totalQuotes % 2 == 0;
+}
+
+void Delim::checkFlagsAndReinitStatus()
+{
+    queue<Token> replacementQueue;
+
+    if(q.front().toString().substr(0,1) == "[")
+        q.front()._pruneTest();
+
+    while(!q.empty())
+    {
+        Token currentTok = q.front();
+
+        if(currentTok.isTest())
+        {
+            if(currentTok.toString().substr(0, 2) == "-d")
+            {
+                currentTok.setStatus(Token::testD);
+
+                string currentTok_str = currentTok.toString();
+                currentTok_str.erase(0, 3);
+                currentTok.setString(currentTok_str);
+            }
+            else if(currentTok.toString().substr(0, 2) == "-f")
+            {
+                currentTok.setStatus(Token::testF);
+
+                string currentTok_str = currentTok.toString();
+                currentTok_str.erase(0, 3);
+                currentTok.setString(currentTok_str);
+            }
+        }
+
+        replacementQueue.push(currentTok);
+        q.pop();
+    }
+
+
+    //Replace queue
+    q.swap(replacementQueue);
+    assert(replacementQueue.empty());
 }

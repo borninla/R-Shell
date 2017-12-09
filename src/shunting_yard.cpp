@@ -14,7 +14,8 @@ void ShuntingYard::run()
         delivery.pop();
 
         //if token is a command, push it into the command stack
-        if(currentToken.getStatus() == Token::notYetRunCmd || currentToken.getStatus() == Token::quote)
+        if( currentToken.getStatus() == Token::notYetRunCmd || currentToken.getStatus() == Token::quote
+                || currentToken.isTest() )
             command_queue.push(currentToken);
         if(currentToken.getStatus() == Token::connector)
         {

@@ -16,8 +16,8 @@ class Delim
 public:
     Delim();
 
-    Delim(char* cstr, char delim, bool quotesSeparately);
-    Delim(string str, char delim, bool quotesSeparately);
+    Delim(char* cstr, char delim, bool quotesSeparately, bool worryAboutTests);
+    Delim(string str, char delim, bool quotesSeparately, bool worryAboutTests);
 
     bool done() const;
     size_t size() const;
@@ -41,6 +41,9 @@ public:
      */
     void compressTokens();
 
+    //Used only to check for test commands
+    void checkFlagsAndReinitStatus();
+
     friend Delim& operator >>(Delim& delim, Token& t);
 
     friend ostream& operator <<(ostream& outs, const Delim& d);
@@ -51,7 +54,7 @@ private:
      * @param cstr Takes the contents of cstr, and populates the queue q within this object
      * @param delim the delimiter character
      */
-    void _init(char* cstr, char delim, bool quotesSeparately);
+    void _init(char* cstr, char delim, bool quotesSeparately, bool worryAboutTests);
 
     bool _properQuotes(string str);
     bool _properQuotes(char* c);

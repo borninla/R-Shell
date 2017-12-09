@@ -4,16 +4,14 @@ Token::Token() : status(error), str("") {}
 
 Token::Token(string str, int status) : status(status), str(trim(str)) {}
 
-Token::Token(string str) : str(trim(str)) {
+Token::Token(string str, bool worryAboutTests) : str(trim(str)) {
 
     size_t testType = _whatKindOfTest(this->str);
 
-
-
-    if (testType != string::npos) {
+    if (testType != string::npos && worryAboutTests) {
 
         status = testType;
-        _pruneTest();
+        //_pruneTest();
 
     } else if (this->str == "&&" || this->str == "||") {
 
@@ -26,6 +24,10 @@ Token::Token(string str) : str(trim(str)) {
     } else if (this->str == ")") {
 
         status = rightParenthesis;
+
+    } else if (this->str[0] == '[') {   //jankyyy
+
+        status = testE;
 
     } else if (!(this->str.empty()) && (this->str[0] == '\"' && this->str[str.size() - 1] == '\"')) {
 
@@ -55,18 +57,19 @@ Token::Token(const vector<Token>& combineUs) {
 
         for (size_t i = 0; i < combineUs.size(); i++) {
 
-            Token& currentToken = combineUs[i];
+            Token currentToken = combineUs[i];  //changed from Token& to Token due to compile error
             strAggregate += currentToken.toString();
             strAggregate += ' ';
         }
 
         str = strAggregate;
+        str = trim(str);
     }
 }
 
 void Token::setStatus(bool wasSuccessful) {
 
-    assert(status == notYetRunCmd);
+    assert(status == notYetRunCmd || this->isTest());   //could also be test command - added to assertion
 
     if (wasSuccessful) {
 
@@ -75,6 +78,18 @@ void Token::setStatus(bool wasSuccessful) {
 
         this->status = failedCmd;
     }
+}
+
+void Token::setStatus(Status s) {
+
+    this->status = s;
+
+}
+
+void Token::setString(string str) {
+
+    this->str = str;
+
 }
 
 int Token::getStatus() const {
@@ -138,11 +153,12 @@ size_t Token::_whatKindOfTest(string str) {
         return string::npos;
     }
 
-    if ( !(str[0] == '[' && str[str.size() - 1] == ']')
-         && toLower(str.substr(0, 4)) != "test")
+    //Really janky, but provides a temporary fix for tests that come in with brackets
+    if(str[0] == '[')
+        return Token::testE;
+
+    if ( !(str[0] == '[' && str[str.size() - 1] == ']') && toLower(str.substr(0, 4)) != "test")
         return string::npos;
-
-
 
     //Now, we know it's a token - just figure out what kind of token it is
     if (str.find("-d") != string::npos) {
@@ -165,7 +181,7 @@ size_t Token::_whatKindOfTest(string str) {
 
 void Token::_pruneTest() {
 
-    assert(this->isTest());
+    //assert(this->isTest());
 
     //Get rid of [] brackets, or "test"
     if (str[0] == '[' && str[str.size() - 1] == ']') {
@@ -184,7 +200,7 @@ void Token::_pruneTest() {
     //Get rid of flags, if there is any
     size_t foundIndex;
 
-    switch(status) {
+    switch (status) {
 
         case Token::testD: {
 
@@ -204,7 +220,7 @@ void Token::_pruneTest() {
 
         default: {
 
-            assert(status == Token::testE);
+            //assert(status == Token::testE);
 
             foundIndex = str.find("-e");
 
@@ -218,4 +234,3 @@ void Token::_pruneTest() {
 
     str = trim(str.substr(foundIndex + 3, string::npos));
 }
-
