@@ -15,7 +15,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
-//#include <sys/wait.h> //uncomment for hammer
+#include <sys/wait.h> //uncomment for hammer
 
 #include "token.h"
 #include "delim.h"
