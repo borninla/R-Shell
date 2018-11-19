@@ -1,0 +1,126 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/delim.h
+iostream
+-
+queue
+-
+string
+-
+cassert
+-
+token.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/token.h
+util.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/util.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/manager.h
+iostream
+-
+stack
+-
+queue
+-
+unistd.h
+-
+cstring
+-
+cstdlib
+-
+string
+-
+climits
+-
+cassert
+-
+vector
+-
+fstream
+-
+sys/stat.h
+-
+sys/types.h
+-
+sys/wait.h
+-
+token.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/token.h
+delim.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/delim.h
+util.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/util.h
+shunting_yard.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/shunting_yard.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/shunting_yard.h
+iostream
+-
+stack
+-
+queue
+-
+cstring
+-
+cassert
+-
+util.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/util.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/token.h
+iostream
+-
+string
+-
+cassert
+-
+queue
+-
+util.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/util.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/util.h
+iostream
+-
+string
+-
+climits
+-
+queue
+-
+stack
+-
+token.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/token.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/src/delim.cpp
+../header/delim.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/delim.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/src/main.cpp
+iostream
+-
+../header/manager.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/manager.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/src/manager.cpp
+../header/manager.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/manager.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/src/shunting_yard.cpp
+../header/shunting_yard.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/shunting_yard.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/src/token.cpp
+../header/token.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/token.h
+
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/src/util.cpp
+../header/util.h
+/Users/andrewlvovsky/Developer/CS 100 Repos/rshell-the-werbenjagermanjensens/header/util.h
+
